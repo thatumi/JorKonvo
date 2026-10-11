@@ -65,6 +65,16 @@
   <li data-i18n-hide-en>Az iOS és Android áruházi kiadások még úton vannak — addig a webapp mobil böngészőben is teljes értékűen működik.</li>
 </ul>
 
+<h3 data-i18n-hide-hu>Verifying a download</h3>
+<h3 data-i18n-hide-en>Letöltés ellenőrzése</h3>
+<p data-i18n-hide-hu>Linux and Windows release assets on <a href="https://git.szabotar.dev/thatumi/JorKonvo/releases" target="_blank" rel="noopener">Forgejo</a> ship with a <code>SHA256SUMS</code> file and a detached <code>SHA256SUMS.asc</code> GPG signature, signed by the key below. Windows builds aren't yet signed with a code-signing certificate, so Windows will show a SmartScreen warning — this lets you verify the installer wasn't tampered with in the meantime.</p>
+<p data-i18n-hide-en>A Linux és Windows release assetek a <a href="https://git.szabotar.dev/thatumi/JorKonvo/releases" target="_blank" rel="noopener">Forgejón</a> egy <code>SHA256SUMS</code> fájllal és egy különálló <code>SHA256SUMS.asc</code> GPG-szignatúrával érkeznek, az alábbi kulccsal aláírva. A Windows-os build még nincs code-signing tanúsítvánnyal aláírva, így a Windows SmartScreen figyelmeztetést fog mutatni — ez viszont lehetővé teszi, hogy ellenőrizd, nem manipulálták-e a telepítőt közben.</p>
+<pre><code>gpg --import jorkonvo-release-signing-key.asc
+gpg --verify SHA256SUMS.asc SHA256SUMS
+sha256sum -c SHA256SUMS</code></pre>
+<p data-i18n-hide-hu>Public key: <a href="jorkonvo-release-signing-key.asc">jorkonvo-release-signing-key.asc</a><br>Fingerprint: <code>5E38 8475 2911 F857 51D1 AFD0 854C 9F0D A0CE 61A0</code></p>
+<p data-i18n-hide-en>Nyilvános kulcs: <a href="jorkonvo-release-signing-key.asc">jorkonvo-release-signing-key.asc</a><br>Ujjlenyomat: <code>5E38 8475 2911 F857 51D1 AFD0 854C 9F0D A0CE 61A0</code></p>
+
 <h3 data-i18n-hide-hu>Something to report about a specific homeserver?</h3>
 <h3 data-i18n-hide-en>Egy konkrét szerverrel kapcsolatos problémád van?</h3>
 <p data-i18n-hide-hu>JorKonvo is a client for the Matrix network — most account and message-delivery issues are specific to the homeserver you're signed into, not the app. If you're using a server not operated by JorKonvo's developer, its operator is the right place to ask first.</p>
