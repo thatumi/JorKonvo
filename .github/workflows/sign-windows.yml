@@ -1,0 +1,71 @@
+name: sign-windows
+
+# Builds the Windows NSIS installer on a GitHub-hosted runner and submits it
+# to SignPath.io for code signing (SignPath's free open-source tier only
+# accepts signing requests whose build ran on a "trusted build system" with
+# origin verification — GitHub-hosted runners qualify, self-hosted/other CI
+# does not, which is why this build happens here and not in Forgejo CI).
+#
+# PREREQUISITES (not done yet as of writing this file):
+#   1. Apply at https://signpath.org/apply.html and get the OSS project approved.
+#   2. In the resulting SignPath organization, create a project + signing policy,
+#      then replace the <TODO: ...> placeholders below with the real slugs.
+#   3. Add repo secret SIGNPATH_API_TOKEN (SignPath user with submitter rights).
+# Until then, the "Submit signing request" step will fail - that's expected.
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "windows-v*"
+
+jobs:
+  build-and-sign:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm ci
+      - run: npm run build:matrix-core
+      - run: npm run build:web
+
+      - name: Build NSIS installer
+        working-directory: apps/desktop
+        run: npx tauri build --bundles nsis
+
+      - name: Locate installer
+        id: locate
+        shell: bash
+        run: |
+          exe=$(find apps/desktop/src-tauri/target/release/bundle/nsis -name '*-setup.exe')
+          cp "$exe" .
+          echo "name=$(basename "$exe")" >> "$GITHUB_OUTPUT"
+
+      - name: Upload unsigned artifact
+        id: upload-unsigned-artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: unsigned-installer
+          path: ${{ steps.locate.outputs.name }}
+
+      - name: Submit signing request to SignPath
+        id: sign
+        uses: signpath/github-action-submit-signing-request@v3
+        with:
+          api-token: "${{ secrets.SIGNPATH_API_TOKEN }}"
+          organization-id: "<TODO: SignPath organization id, after approval>"
+          project-slug: "<TODO: SignPath project slug, after approval>"
+          signing-policy-slug: "<TODO: SignPath signing policy slug, after approval>"
+          github-artifact-id: "${{ steps.upload-unsigned-artifact.outputs.artifact-id }}"
+          wait-for-completion: true
+          output-artifact-directory: signed
+
+      - name: Upload signed artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: signed-installer
+          path: signed/
