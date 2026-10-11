@@ -1,0 +1,146 @@
+# Flathub from-source manifest for JorKonvo (Tauri + CEF/Chromium desktop app).
+#
+# Differs from packaging/linux/flatpak/com.jorkonvo.desktop.yml in this repo
+# (which repackages a prebuilt release .deb - not allowed on Flathub). This one
+# builds the app from source inside the sandbox. CEF itself (prebuilt Chromium
+# binaries - nobody compiles Chromium from scratch for a from-source Flatpak)
+# is vendored as a pinned, checksummed source archive, exactly like
+# Electron-based Flathub apps vendor a prebuilt Electron binary.
+#
+# Verified locally (2026-10-11) with the Flathub-matched builder:
+#   flatpak install flathub org.flatpak.Builder
+#   flatpak run org.flatpak.Builder --force-clean --user \
+#     --repo=flatpak-repo flatpak-build com.jorkonvo.desktop.yml
+# Full offline build-commands (--offline cargo + npm), appstreamcli compose,
+# and export all succeeded; the resulting app launches and CEF initializes
+# (confirmed under Xvfb - GPU/EGL failures there are a headless-test-host
+# limitation, not a packaging defect).
+app-id: com.jorkonvo.desktop
+runtime: org.gnome.Platform
+runtime-version: '51'
+sdk: org.gnome.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.node22
+  - org.freedesktop.Sdk.Extension.rust-stable
+command: jorkonvo
+
+finish-args:
+  # Matrix homeserver, media, LiveKit/TURN.
+  - --share=network
+  - --share=ipc
+  # CEF runs on X11 (XWayland on a Wayland session); no native Wayland flags set.
+  - --socket=x11
+  # GPU rendering / WebGL / video decode.
+  - --device=dri
+  # Calls: speaker + microphone via PulseAudio (pipewire-pulse on modern distros).
+  - --socket=pulseaudio
+  # Camera: Flatpak has no narrower option than --device=all for V4L2 devices
+  # (the PipeWire camera portal is not wired into CEF). Drop this line and
+  # video calls lose the webcam; audio/screen-share are unaffected.
+  - --device=all
+  # Desktop notifications.
+  - --talk-name=org.freedesktop.Notifications
+
+build-options:
+  append-path: /usr/lib/sdk/node22/bin:/usr/lib/sdk/rust-stable/bin
+  env:
+    CARGO_HOME: /run/build/jorkonvo/cargo
+    CARGO_NET_OFFLINE: 'true'
+    CEF_PATH: /run/build/jorkonvo/cef-vendor
+    XDG_CACHE_HOME: /run/build/jorkonvo/flatpak-node/cache
+    npm_config_cache: /run/build/jorkonvo/flatpak-node/npm-cache
+    npm_config_offline: 'true'
+
+modules:
+  - name: jorkonvo
+    buildsystem: simple
+    sources:
+      - type: git
+        url: https://github.com/thatumi/JorKonvo.git
+        commit: 8764ea49dc68b0a51c1a6aad605e45a599dac25b
+        dest: src
+
+      # CEF prebuilt binaries (Chromium build): pinned + checksummed, vendored
+      # as a build input rather than downloaded at build time (network is
+      # disabled during the real Flathub build-commands). Reorganized below
+      # into the exact layout cef-dll-sys's build.rs expects at CEF_PATH.
+      - type: file
+        url: https://cef-builds.spotifycdn.com/cef_binary_151.3.12+gd9cea67+chromium-151.0.7922.47_linux64_minimal.tar.bz2
+        sha256: f27934bd1650471e6670ab350a5abececafd7ccbe3d81da2e4063d2c0cc953a4
+        dest-filename: cef.tar.bz2
+
+      # Offline npm/cargo dependency sources, generated from package-lock.json
+      # and Cargo.lock via flatpak-node-generator / flatpak-cargo-generator.py.
+      - node-sources.json
+      - cargo-sources.json
+
+      - type: file
+        path: com.jorkonvo.desktop.desktop
+      - type: file
+        path: com.jorkonvo.desktop.metainfo.xml
+
+    build-commands:
+      # --- Vendor CEF into $CEF_PATH/<cef_version>/cef_linux_x86_64/, matching
+      # exactly what cef-dll-sys's build.rs / download-cef's extract_target_archive
+      # produce, so the build.rs offline-detection path is taken (no network).
+      - |
+        set -e
+        CEF_DIR="$CEF_PATH/151.3.12/cef_linux_x86_64"
+        mkdir -p "$CEF_DIR"
+        WORK="$(mktemp -d)"
+        tar -xjf cef.tar.bz2 -C "$WORK"
+        SRC="$WORK/cef_binary_151.3.12+gd9cea67+chromium-151.0.7922.47_linux64_minimal"
+        mv "$SRC"/Release/* "$CEF_DIR"/
+        mv "$SRC"/Resources/* "$CEF_DIR"/
+        mv "$SRC"/CMakeLists.txt "$SRC"/cmake "$SRC"/include "$SRC"/libcef_dll "$SRC"/CREDITS.html "$CEF_DIR"/
+        cat > "$CEF_DIR/archive.json" <<'JSON'
+        {
+          "type": "minimal",
+          "name": "cef_binary_151.3.12+gd9cea67+chromium-151.0.7922.47_linux64_minimal.tar.bz2",
+          "sha1": "233c2d4e5fcf2654c16aa98ff7c0665a2d1fa7c3"
+        }
+        JSON
+        rm -rf "$WORK"
+
+      # --- Web bundle (matrix-core -> web dist), fully offline.
+      - cd src && npm ci --offline && npm run build
+
+      # --- Tauri + CEF Rust build. Linux's cef feature does NOT invoke cmake/
+      # ninja (build.rs only runs the CMake wrapper build on windows/macos);
+      # it links dylib=cef directly and copies CEF runtime files next to the
+      # binary (RUNPATH=$ORIGIN) - confirmed by inspecting build.rs and the
+      # already-built release binary's ELF RUNPATH.
+      - cd src/apps/desktop/src-tauri && cargo build --release --offline --features cef
+
+      # --- Assemble /app/lib/jorkonvo: the binary + everything build.rs copied
+      # next to it in target/release (libcef.so, locales, *.pak, icudtl.dat, ...).
+      - |
+        set -e
+        OUT=src/apps/desktop/src-tauri/target/release
+        install -d /app/lib/jorkonvo
+        cp -a "$OUT"/jorkonvo-desktop /app/lib/jorkonvo/
+        cp -a "$OUT"/libcef.so "$OUT"/libEGL.so "$OUT"/libGLESv2.so \
+          "$OUT"/libvk_swiftshader.so "$OUT"/libvulkan.so.1 \
+          "$OUT"/vk_swiftshader_icd.json "$OUT"/v8_context_snapshot.bin \
+          "$OUT"/icudtl.dat "$OUT"/resources.pak \
+          "$OUT"/chrome_100_percent.pak "$OUT"/chrome_200_percent.pak \
+          /app/lib/jorkonvo/
+        cp -a "$OUT"/locales /app/lib/jorkonvo/
+
+      - |
+        cat > jorkonvo.sh <<'SH'
+        #!/bin/sh
+        # Flatpak already confines the app (bwrap: namespaces + seccomp), and
+        # Chromium's own sandbox cannot start inside it (no nested user
+        # namespaces, no setuid), so it is disabled here on purpose. Renderer
+        # isolation from the *host* is Flatpak's.
+        exec /app/lib/jorkonvo/jorkonvo-desktop --no-sandbox "$@"
+        SH
+        install -Dm755 jorkonvo.sh /app/bin/jorkonvo
+      - install -Dm644 com.jorkonvo.desktop.desktop /app/share/applications/com.jorkonvo.desktop.desktop
+      - install -Dm644 com.jorkonvo.desktop.metainfo.xml /app/share/metainfo/com.jorkonvo.desktop.metainfo.xml
+      - |
+        for s in 32x32 128x128 256x256 512x512; do
+          install -Dm644 src/apps/desktop/src-tauri/icons/${s}.png \
+            /app/share/icons/hicolor/${s}/apps/com.jorkonvo.desktop.png 2>/dev/null || true
+        done
