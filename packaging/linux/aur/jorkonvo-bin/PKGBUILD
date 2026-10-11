@@ -6,13 +6,12 @@
 # mounted AppImage. Test with packaging/linux/aur/test-in-container.sh.
 pkgname=jorkonvo-bin
 _appname=JorKonvo
-pkgver=0.1.3
+pkgver=0.1.4
 pkgrel=1
 pkgdesc="Discord-style Matrix client (Tauri + Chromium/CEF desktop app)"
 arch=('x86_64')
 url="https://git.szabotar.dev/thatumi/JorKonvo"
-license=('custom:proprietary')   # see LICENSE in the repo root - redistributing the
-                                  # official binary unmodified is explicitly permitted
+license=('MIT')
 # The bundle ships its own libraries; these are the host-side pieces it still
 # talks to (X11 session, GL driver, ALSA, fontconfig + at least one font: without
 # any font Skia aborts with "SkFontMgr_FontConfigInterface: Not implemented").
@@ -41,10 +40,10 @@ source=("${_appimage}::${url}/releases/download/linux-v${pkgver}/${_appimage}"
         "jorkonvo.sh"
         "LICENSE")
 noextract=("${_appimage}")
-sha256sums=('4ce9c398e173ac443840234f61ecb3efa49bba2029bc4658eda40c757cce9147'   # AppImage: dist/linux/SHA256SUMS - update on every release
+sha256sums=('b08bf31f368b871bbc6ffa149da51144e7f053541d66345e4420834b399eb17d'   # AppImage: dist/linux/SHA256SUMS - update on every release
             '9475b756cd971ecfcaf79bd4bf36a38cf1add37ca3c2123259f35ed65c9a2001'
             '7fa7e1ddfc4cc3a44fdcc841f9570de81bb6ed694551b81ab61b4adaaad6b6a1'
-            '86a7b68941a21983a46a402de1175ee8626ab535c68e7e7e855e786f1fc827be')
+            '443c7c13338a8d9b49799d7bafbd327039abdbb8ca92e94f2ceb767a63ac2b33')
 
 prepare() {
   chmod +x "${_appimage}"

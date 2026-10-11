@@ -1,14 +1,21 @@
-Copyright (c) 2026 Tamás Szabó. All rights reserved.
+MIT License
 
-This software is proprietary. The source code in this repository is not
-licensed for reuse, modification, or redistribution.
+Copyright (c) 2026 Tamás Szabó
 
-Official, pre-built binaries published by the project (the AppImage, .deb,
-and other installers attached to its Forgejo releases) may be downloaded,
-installed, run, and redistributed as-is, unmodified, for personal,
-non-commercial use - including via third-party package repositories (such
-as the AUR) that fetch and repackage those same official binaries without
-altering their contents.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-No other rights are granted. All other uses require the copyright holder's
-prior written permission.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
