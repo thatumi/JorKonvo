@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a78bfa"/>
+      <stop offset="55%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#6d28d9"/>
+    </linearGradient>
+  </defs>
+
+  <path fill="url(#g)" d="
+    M146 46
+    L366 46
+    Q466 46 466 146
+    L466 266
+    Q466 366 366 366
+    L195 366
+    L105 452
+    Q90 466 90 445
+    L90 366
+    Q46 366 46 266
+    L46 146
+    Q46 46 146 46
+    Z
+  "/>
+
+  <rect x="132" y="151" width="56" height="110" rx="28" fill="#ffffff"/>
+  <rect x="228" y="116" width="56" height="180" rx="28" fill="#ffffff"/>
+  <rect x="324" y="136" width="56" height="140" rx="28" fill="#ffffff"/>
+</svg>
