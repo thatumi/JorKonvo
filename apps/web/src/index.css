@@ -1,0 +1,616 @@
+@import "tailwindcss";
+
+/*
+ * JorKonvo visual identity.
+ *
+ * The three-pane layout and interaction model stay deliberately familiar
+ * (people coming from Discord shouldn't feel lost), but the look is its own:
+ * a violet accent instead of blurple, warmer graphite neutrals with a faint
+ * violet cast, a system-font stack (not a Discord-specific face), softer
+ * shadows, and a small motion system so the app doesn't feel static.
+ *
+ * Token NAMES are unchanged from the first pass so no component markup had to
+ * change - only the values, plus new radius / shadow / motion tokens.
+ */
+
+@theme {
+  /* ---- surfaces (dark) : rail darkest -> sidebar -> chat lightest ---- */
+  --color-bg-floating: #141218;
+  --color-bg-darkest: #18161e;
+  --color-bg-dark: #201e28;
+  --color-bg-primary: #272530;
+  --color-bg-secondary: #302e3b;
+  --color-bg-modifier-hover: #322f3d;
+  --color-bg-modifier-selected: #3c3949;
+
+  /* ---- brand : violet, clearly not #5865f2 ---- */
+  --color-brand: #8b5cf6;
+  --color-brand-hover: #7c3aed;
+
+  /* ---- status ---- */
+  --color-online: #3fbf7f;
+  --color-idle: #f5a623;
+  --color-dnd: #ec4b56;
+  --color-offline: #7a7787;
+  --color-danger: #ec4b56;
+
+  /* ---- text ---- */
+  --color-normal: #e7e6ec;
+  --color-muted: #9a97a8;
+  --color-header: #f6f5f9;
+  --color-link: #a58bff;
+
+  --color-border: #332f3f;
+
+  /* ---- shape ---- */
+  --radius-sm: 0.3rem;
+  --radius-md: 0.55rem;
+  --radius-lg: 0.85rem;
+  --radius-xl: 1.15rem;
+
+  /* ---- elevation : soft, violet-tinted ---- */
+  --shadow-sm: 0 1px 2px rgb(15 12 20 / 0.35);
+  --shadow-md: 0 6px 20px -6px rgb(15 12 20 / 0.5), 0 2px 6px -2px rgb(15 12 20 / 0.35);
+  --shadow-lg: 0 14px 40px -10px rgb(12 9 18 / 0.6), 0 4px 12px -4px rgb(12 9 18 / 0.42);
+  --shadow-xl: 0 24px 64px -12px rgb(12 9 18 / 0.68), 0 8px 20px -6px rgb(12 9 18 / 0.5);
+
+  /* ---- type ---- */
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Inter",
+    "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+
+  /* ---- motion : exposed as animate-* utilities ---- */
+  --animate-fade-up: jk-fade-up 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-fade-in: jk-fade-in 180ms ease-out both;
+  --animate-scale-in: jk-scale-in 190ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
+  --animate-slide-in-right: jk-slide-in-right 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-slide-in-up: jk-slide-in-up 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-page-in-right: jk-page-in-right 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-page-in-left: jk-page-in-left 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-pop: jk-pop 220ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-speaking-pulse: jk-speaking-pulse 1.4s ease-in-out infinite;
+}
+
+/* Light theme: same custom properties, so every `var(--…)`-backed utility
+   picks them up with no light: variants. */
+:root[data-theme="light"] {
+  --color-bg-floating: #ffffff;
+  --color-bg-darkest: #e7e4ef;
+  --color-bg-dark: #f1eef8;
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f4f1fb;
+  --color-bg-modifier-hover: #ece9f6;
+  --color-bg-modifier-selected: #e3def1;
+
+  --color-brand: #7c3aed;
+  --color-brand-hover: #6d28d9;
+
+  --color-online: #1a9c58;
+  --color-idle: #d98e0b;
+  --color-dnd: #dc3f4a;
+  --color-offline: #8b8797;
+  --color-danger: #dc3f4a;
+
+  --color-normal: #2b2a33;
+  --color-muted: #6a6779;
+  --color-header: #14131a;
+  --color-link: #6d28d9;
+
+  --color-border: #e4dff0;
+
+  --shadow-sm: 0 1px 2px rgb(60 50 90 / 0.1);
+  --shadow-md: 0 6px 20px -6px rgb(60 50 90 / 0.18), 0 2px 6px -2px rgb(60 50 90 / 0.12);
+  --shadow-lg: 0 14px 40px -10px rgb(60 50 90 / 0.22), 0 4px 12px -4px rgb(60 50 90 / 0.16);
+  --shadow-xl: 0 24px 64px -12px rgb(60 50 90 / 0.26), 0 8px 20px -6px rgb(60 50 90 / 0.18);
+}
+
+/*
+ * Appearance presets (User settings → Appearance). Two orthogonal knobs on
+ * top of light/dark:
+ *   data-accent   - retints only the brand colour (works in both themes)
+ *   data-surface  - retints the neutral background ramp (tuned per theme)
+ * Both are applied as attributes on <html> by themeStore.ts. Declared AFTER
+ * the light block so an accent choice wins over the light theme's default
+ * violet; surface blocks are theme-scoped so they never fight it.
+ */
+
+:root[data-accent="indigo"] {
+  --color-brand: #6366f1;
+  --color-brand-hover: #4f46e5;
+  --color-link: #a5b4fc;
+}
+:root[data-accent="sky"] {
+  --color-brand: #0ea5e9;
+  --color-brand-hover: #0284c7;
+  --color-link: #7dd3fc;
+}
+:root[data-accent="emerald"] {
+  --color-brand: #10b981;
+  --color-brand-hover: #059669;
+  --color-link: #6ee7b7;
+}
+:root[data-accent="amber"] {
+  --color-brand: #f59e0b;
+  --color-brand-hover: #d97706;
+  --color-link: #fcd34d;
+}
+:root[data-accent="rose"] {
+  --color-brand: #f43f5e;
+  --color-brand-hover: #e11d48;
+  --color-link: #fda4af;
+}
+:root[data-accent="crimson"] {
+  --color-brand: #dc2626;
+  --color-brand-hover: #b91c1c;
+  --color-link: #fca5a5;
+}
+:root[data-accent="steel"] {
+  --color-brand: #8a8f9c;
+  --color-brand-hover: #767b88;
+  --color-link: #c3c7d0;
+}
+:root[data-theme="light"][data-accent="sky"],
+:root[data-theme="light"][data-accent="emerald"],
+:root[data-theme="light"][data-accent="amber"] {
+  /* the pale links above are unreadable on a light ground */
+  --color-link: var(--color-brand-hover);
+}
+
+/* ---- surface: dark ---- */
+:root[data-theme="dark"][data-surface="slate"] {
+  --color-bg-floating: #0d1117;
+  --color-bg-darkest: #10151d;
+  --color-bg-dark: #171d27;
+  --color-bg-primary: #1c2530;
+  --color-bg-secondary: #26313f;
+  --color-bg-modifier-hover: #232e3b;
+  --color-bg-modifier-selected: #2d3a49;
+  --color-border: #262f3d;
+}
+:root[data-theme="dark"][data-surface="obsidian"] {
+  --color-bg-floating: #000000;
+  --color-bg-darkest: #050506;
+  --color-bg-dark: #0c0c0f;
+  --color-bg-primary: #101013;
+  --color-bg-secondary: #17171c;
+  --color-bg-modifier-hover: #1c1c22;
+  --color-bg-modifier-selected: #26262d;
+  --color-border: #1d1d23;
+}
+:root[data-theme="dark"][data-surface="mocha"] {
+  --color-bg-floating: #16110d;
+  --color-bg-darkest: #1b1510;
+  --color-bg-dark: #241d15;
+  --color-bg-primary: #2b2219;
+  --color-bg-secondary: #362b20;
+  --color-bg-modifier-hover: #322820;
+  --color-bg-modifier-selected: #3f3327;
+  --color-border: #34291f;
+}
+
+/* ---- surface: light ---- */
+:root[data-theme="light"][data-surface="slate"] {
+  --color-bg-floating: #ffffff;
+  --color-bg-darkest: #dde3ec;
+  --color-bg-dark: #eaeff5;
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #eef2f8;
+  --color-bg-modifier-hover: #e6ecf4;
+  --color-bg-modifier-selected: #dbe3ee;
+  --color-border: #dde3ec;
+}
+:root[data-theme="light"][data-surface="mocha"] {
+  --color-bg-floating: #fffcf6;
+  --color-bg-darkest: #ece3d3;
+  --color-bg-dark: #f5ecdd;
+  --color-bg-primary: #fffdf9;
+  --color-bg-secondary: #f7f0e3;
+  --color-bg-modifier-hover: #efe7d7;
+  --color-bg-modifier-selected: #e8ddc9;
+  --color-border: #e6dcc8;
+}
+/* obsidian in light mode = plain graphite (no OLED concept); no override. */
+
+/* ---- corner style ----
+   Retargets the common border-radius utilities. Deliberately does NOT touch:
+   - rounded-full (avatars, status dots, pills must stay round)
+   - rounded-2xl / rounded-3xl (the space rail's icons animate BETWEEN these
+     two while their button clips content with overflow-hidden - changing the
+     radius desyncs the clip and the hover colour bleeds into the corners)
+   - anything inside .jk-space-rail (that whole column is a hand-tuned
+     "morphing squircle" zone)
+   :where() keeps specificity at the [data-corners] attribute alone, which
+   still beats a bare utility class. */
+:root[data-corners="sharp"]
+  :where(
+    .rounded, .rounded-sm, .rounded-md, .rounded-lg, .rounded-xl,
+    .rounded-\[20px\]
+  ):not(.jk-space-rail, .jk-space-rail *) {
+  border-radius: 0.125rem;
+}
+:root[data-corners="round"]
+  :where(.rounded, .rounded-sm, .rounded-md):not(.jk-space-rail, .jk-space-rail *) {
+  border-radius: 0.6rem;
+}
+:root[data-corners="round"]
+  :where(.rounded-lg, .rounded-xl):not(.jk-space-rail, .jk-space-rail *) {
+  border-radius: 1rem;
+}
+:root[data-corners="round"]
+  :where(.rounded-\[20px\]):not(.jk-space-rail, .jk-space-rail *) {
+  border-radius: 1.5rem;
+}
+
+@keyframes jk-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+}
+@keyframes jk-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes jk-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.955);
+  }
+}
+@keyframes jk-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+}
+@keyframes jk-slide-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+@keyframes jk-page-in-right {
+  from {
+    transform: translateX(100%);
+  }
+}
+@keyframes jk-page-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+}
+@keyframes jk-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  60% {
+    transform: scale(1.09);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+/* Discord-style "who's talking" ring - a soft pulsing glow rather than a
+   flat static outline, so it reads as live/animated rather than a status
+   badge that just happens to be on. */
+@keyframes jk-speaking-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 2px var(--color-online);
+  }
+  50% {
+    box-shadow: 0 0 0 3px var(--color-online);
+  }
+}
+
+/* Super-reaction burst: an emoji floats up from near the bottom of the chat,
+   drifting sideways and spinning, then fades. Per-particle x-drift / spin /
+   duration come from CSS custom properties set inline (see ReactionEffects). */
+@keyframes jk-reaction-float {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(0deg) scale(0.6);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(calc(var(--jk-drift) * 0.15), -12vh) rotate(calc(var(--jk-spin) * 0.15)) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--jk-drift), -78vh) rotate(var(--jk-spin)) scale(0.9);
+  }
+}
+.jk-reaction-particle {
+  animation: jk-reaction-float var(--jk-dur, 2200ms) cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .jk-reaction-particle {
+    animation: jk-fade-in 200ms ease-out both;
+  }
+}
+
+/*
+ * Any row/element wired to useContextMenu's onContextMenu: on a touch
+ * device, a long-press already fires the same `contextmenu` DOM event a
+ * desktop right-click does (confirmed live on a physical Android device -
+ * the custom menu opens correctly), but the OS's own long-press text
+ * selection also starts at the same time and isn't cancelled by the
+ * event's preventDefault(), so a text-highlight + selection handle bleeds
+ * out from under the menu. These targets are all identity/label text
+ * (room names, member names) or a message row with its own "Copy Text"
+ * menu action already, so native drag-select was never the intended way
+ * to copy from them - safe (and, for messages, actually more consistent
+ * with the app's own design) to suppress it outright.
+ */
+.jk-ctx-target {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/*
+ * The mobile swipe containers (MainLayout's rail|chat row, ChatArea's
+ * chat|members row) move their contents with a transform only - they must
+ * never have a scroll offset of their own. `overflow: hidden` still allows a
+ * *programmatic* scroll (a scrollIntoView in a descendant, WebKit revealing
+ * a focused input), and one that happened mid-slide left the whole layout
+ * shifted until the app was force-quit (seen on iOS). `clip` can't be
+ * scrolled at all; the `hidden` line is the fallback for engines without
+ * `clip` (iOS < 16), where the onScroll reset in the components takes over.
+ */
+.jk-swipe-clip {
+  overflow: hidden;
+  overflow: clip;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  /* 100dvh tracks the mobile browser's actual visible viewport as its
+     address bar collapses/expands - plain 100% can end up a bit taller
+     than what's really on screen, which is exactly what let the whole
+     page scroll/bounce instead of just the panels meant to. Unsupported
+     values are ignored, so this is a no-op fallback everywhere else. */
+  height: 100dvh;
+}
+
+#root {
+  /* viewport-fit=cover (see index.html) lets the app paint edge to edge, so
+     this dark gutter shows behind every inset surface. NO safe-area padding
+     here: a blanket #root inset also pads things that must not be inset
+     (position:fixed overlays are laid out against the viewport, not #root,
+     so they'd cover the status bar anyway) and over-pads scrolling content
+     at the bottom. Each surface (the app shell, full-screen fixed panels,
+     call screens, ...) carries its own env(safe-area-inset-*) instead, and
+     every top-anchored fixed/absolute element offsets itself - a positioned
+     child is NOT protected by its parent's padding. All values are 0 on
+     devices without safe areas, so desktop is unaffected. */
+  background-color: var(--color-bg-floating);
+}
+
+html,
+body {
+  /* The app is a fixed-viewport shell - every scrollable region (timeline,
+     member list, sidebars, ...) manages its own overflow-y-auto. Without
+     this, mobile browsers let the whole document rubber-band/scroll
+     whenever anything is a pixel taller than the visible viewport. */
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg-primary);
+  color: var(--color-normal);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* Zoom-lock, part 1 of 2: allows panning and pinch but kills the
+     double-tap-to-zoom gesture. Pinch is handled by the viewport meta
+     (maximum-scale=1, user-scalable=no); input-focus zoom by the 16px
+     form-field rule at the bottom of this file. */
+  touch-action: manipulation;
+}
+
+@layer base {
+  /* A calm default transition for anything interactive that doesn't already
+     opt into its own (Tailwind's `transition-*` utilities live in the
+     utilities layer, so they still win where a component sets one). */
+  button,
+  a,
+  input,
+  select,
+  textarea,
+  summary,
+  [role="button"],
+  [role="tab"] {
+    transition-property: color, background-color, border-color, box-shadow, opacity, transform, filter;
+    transition-duration: 140ms;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Tactile press feedback - deliberately tiny. */
+  button:not(:disabled):active,
+  [role="button"]:active {
+    transform: scale(0.97);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+    border-radius: 5px;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-brand) 38%, transparent);
+    color: var(--color-header);
+  }
+}
+
+* {
+  scrollbar-color: color-mix(in srgb, var(--color-muted) 45%, transparent) transparent;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: color-mix(in srgb, var(--color-muted) 40%, transparent);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(in srgb, var(--color-muted) 65%, transparent);
+}
+
+/* Compact message density (User settings → Appearance). Tightens the
+   timeline without the full inline-layout rewrite. */
+:root[data-density="compact"] .jk-msg-group {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  gap: 0.5rem;
+  line-height: 1.3;
+}
+:root[data-density="compact"] .jk-msg-group + .jk-msg-group {
+  margin-top: 2px;
+}
+:root[data-density="compact"] .jk-msg-avatar {
+  width: 1.75rem;
+  padding-top: 0.125rem;
+}
+:root[data-density="compact"] .jk-msg-avatar > div {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+}
+:root[data-density="compact"] .jk-msg-avatar img,
+:root[data-density="compact"] .jk-msg-avatar > div > div {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  font-size: 0.65rem !important;
+}
+
+/* Personal chat wallpaper (User settings → Appearance). --jk-chat-wallpaper
+   is an image url() and --jk-chat-wallpaper-dim a 0..1 opacity, both set on
+   <html> by chatWallpaper.ts. The image sits behind the chat column with a
+   theme-coloured scrim over it so message text stays readable. */
+:root[data-wallpaper="on"] .jk-chat-wallpaper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: var(--jk-chat-wallpaper);
+  background-size: cover;
+  background-position: center;
+}
+:root[data-wallpaper="on"] .jk-chat-wallpaper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-color: var(--color-bg-primary);
+  opacity: var(--jk-chat-wallpaper-dim, 0.6);
+}
+:root[data-wallpaper="on"] .jk-chat-wallpaper > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Roomy density - the opposite direction: extra breathing room between
+   message groups for a calmer, more readable feed. */
+:root[data-density="roomy"] .jk-msg-group {
+  padding-top: 0.35rem;
+  padding-bottom: 0.35rem;
+}
+:root[data-density="roomy"] .jk-msg-group + .jk-msg-group {
+  margin-top: 0.6rem;
+}
+
+/* Respect the OS "reduce motion" setting everywhere. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Same, but from the in-app Accessibility toggle (displayPrefs.ts) - lets
+   someone reduce motion here without changing it system-wide. */
+:root[data-reduced-motion="1"] *,
+:root[data-reduced-motion="1"] *::before,
+:root[data-reduced-motion="1"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Accessibility: High Contrast - the muted/secondary text tone is,
+   deliberately, low-contrast against the background everywhere else in the
+   app (that's the point of "muted"), but that's a real readability problem
+   for low-vision users. This flattens muted text to the normal tone and
+   thickens up otherwise-faint borders instead of trying to selectively
+   fix individual components. */
+:root[data-high-contrast="1"] {
+  --color-muted: var(--color-normal);
+  --color-border: color-mix(in srgb, var(--color-normal) 40%, transparent);
+}
+
+/* Accessibility: always-visible focus rings (WCAG 2.4.7) - the app already
+   relies on the browser's own default focus styling almost everywhere,
+   which several browsers suppress or render very faintly by default. */
+:root[data-focus-outlines="1"] *:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* Accessibility: always-underlined links (WCAG 1.4.1, "use of color") -
+   colour alone (text-link) is the only thing distinguishing a link from
+   plain text until it's hovered; this makes the distinction permanent. */
+:root[data-underline-links="1"] .text-link {
+  text-decoration: underline;
+}
+
+/* Accessibility: message text line-height, adjustable via the Accessibility
+   pane's "Message line spacing" slider (displayPrefs.ts lineHeightScale).
+   1.375rem matches the Tailwind leading-[1.375rem] utility already used on
+   message bodies, so the default (scale 1) is a no-op. */
+:root {
+  --jk-message-line-height: 1.375rem;
+}
+.jk-message-text {
+  line-height: var(--jk-message-line-height);
+}
+
+/*
+ * Zoom-lock, part 2 of 2: iOS auto-zooms an input/textarea/select into
+ * focus when its computed font-size is under 16px. Several fields across
+ * the app use text-xs / text-sm utilities (and others inherit a smaller
+ * size from a compact parent), which made the whole view jump every time
+ * one was focused on a phone.
+ *
+ * This rule is deliberately UNLAYERED: Tailwind v4 puts every utility in
+ * `@layer utilities`, and unlayered author styles beat all layers in the
+ * cascade - so this wins over every text-* class on or around a form
+ * field without needing !important. 16px is the app's base body size, so
+ * fields that already inherited the default are visually unchanged.
+ */
+input,
+textarea,
+select {
+  font-size: 16px;
+}

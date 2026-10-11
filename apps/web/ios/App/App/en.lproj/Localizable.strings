@@ -1,0 +1,38 @@
+/* Push notification texts. Sygnal's APNs pushkin sends only a loc-key +
+   loc-args (services/sygnal/README.md), iOS renders them from here.
+   Argument order is Sygnal's (apnspushkin._get_payload_full); every
+   argument must stay in the string, because iOS formats them positionally.
+   An encrypted event has no body, so it arrives as MSG_FROM_USER[_IN_ROOM]. */
+
+/* [sender, room, text] */
+"MSG_FROM_USER_IN_ROOM_WITH_CONTENT" = "%1$@ (%2$@): %3$@";
+/* [sender, text] */
+"MSG_FROM_USER_WITH_CONTENT" = "%1$@: %2$@";
+/* [sender, room] - encrypted message (or an event type without text) */
+"MSG_FROM_USER_IN_ROOM" = "%1$@ (%2$@): Encrypted message";
+/* [sender] */
+"MSG_FROM_USER" = "%1$@: Encrypted message";
+
+/* [sender, file name, room] */
+"IMAGE_FROM_USER_IN_ROOM" = "%1$@ (%3$@): 🖼 %2$@";
+/* [sender, file name] */
+"IMAGE_FROM_USER" = "%1$@: 🖼 %2$@";
+
+/* [room, sender, action] - /me */
+"ACTION_FROM_USER_IN_ROOM" = "* %2$@ %3$@ (%1$@)";
+/* [sender, action] */
+"ACTION_FROM_USER" = "* %1$@ %2$@";
+
+/* [caller] */
+"VOICE_CALL_FROM_USER" = "📞 %1$@ is calling you";
+"VIDEO_CALL_FROM_USER" = "📹 %1$@ is video calling you";
+
+/* [inviter, room] */
+"USER_INVITE_TO_NAMED_ROOM" = "%1$@ invited you to %2$@";
+/* [inviter] */
+"USER_INVITE_TO_CHAT" = "%1$@ invited you to a chat";
+
+/* Push phase 2 (event_id_only pusher): what arrives is only this alert +
+   room/event ids; the NotificationService extension replaces it with the
+   sender and text. Shown as-is if it can't ("hidden" preview, offline). */
+"JK_NEW_MESSAGE" = "New message";

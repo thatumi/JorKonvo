@@ -1,0 +1,16 @@
+# TLS front for the disposable test Synapse. Serves the same content under
+# two names so the suite can reach it either way:
+#   - localhost  : the published 127.0.0.1:18448 port, used on a dev box
+#   - caddy      : the compose service name, used by a docker-outside-of-
+#                  docker CI job that joins the compose network
+# `tls internal` = Caddy's own CA; the suite runs with ignoreHTTPSErrors /
+# NODE_TLS_REJECT_UNAUTHORIZED=0.
+{
+	admin off
+	auto_https disable_redirects
+}
+
+localhost, caddy {
+	tls internal
+	reverse_proxy synapse:8008
+}

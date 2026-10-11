@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <title>JorKonvo</title>
+    <script>
+      // Sets the theme attribute + a matching background colour on <html>
+      // synchronously, before the first paint and before React/Vite's own
+      // theme init (themeStore.initTheme, which only runs inside a
+      // useEffect - i.e. after mount). Without this, any hard page load or
+      // reload lands on the browser's own default white canvas for the
+      // brief window before React mounts and CSS finishes applying - a
+      // one-line flash that reads as a UI bug, especially jarring for
+      // someone using the app in dark mode. This mirrors themeStore's own
+      // "dark by default" / "system" resolution logic so the two never
+      // disagree.
+      (function () {
+        try {
+          var pref = localStorage.getItem("jorkonvo-theme");
+          var theme =
+            pref === "light" || pref === "dark"
+              ? pref
+              : window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches
+                ? "light"
+                : "dark";
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.style.backgroundColor = theme === "light" ? "#ffffff" : "#18161e";
+        } catch (e) {
+          /* localStorage unavailable (private mode etc.) - default dark styling still applies via CSS */
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

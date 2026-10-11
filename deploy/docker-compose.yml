@@ -1,0 +1,188 @@
+# JorKonvo "Matrix server in a box"
+#
+# A complete, Discord-like Matrix homeserver:
+#   - Synapse + Postgres            (chat, E2EE, spaces)
+#   - LiveKit + lk-jwt-service      (group voice/video calls, screen share)
+#   - coturn                        (WebRTC NAT traversal / TURN)
+#   - Caddy                         (reverse proxy, automatic HTTPS, .well-known)
+#
+# Optional (enable with `--profile <name>`):
+#   - mas            Matrix Authentication Service  -> unlocks QR-code login
+#   - admin          synapse-admin web UI
+#   - webapp         serves the JorKonvo web build at the apex domain
+#
+# Everything is driven by ./.env - copy .env.example, fill it in, then run
+# ./scripts/provision.sh (generates secrets + renders configs) and
+# `docker compose up -d`.
+
+x-restart: &restart
+  restart: unless-stopped
+
+services:
+  postgres:
+    <<: *restart
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: synapse
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: synapse
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U synapse"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  synapse:
+    <<: *restart
+    image: ghcr.io/element-hq/synapse:latest
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SYNAPSE_CONFIG_DIR: /data
+      SYNAPSE_CONFIG_PATH: /data/homeserver.yaml
+    volumes:
+      - ./synapse:/data
+      - synapse_media:/data/media_store
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8008/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 6
+
+  # Mints LiveKit access tokens for Matrix users joining a group call
+  # (element-hq/lk-jwt-service). The JorKonvo client discovers this via the
+  # `org.matrix.msc4143.rtc_foci` entry Caddy serves in .well-known.
+  lk-jwt:
+    <<: *restart
+    image: ghcr.io/element-hq/lk-jwt-service:latest
+    environment:
+      LIVEKIT_URL: "wss://${LIVEKIT_DOMAIN}"
+      LIVEKIT_KEY: "${LIVEKIT_API_KEY}"
+      LIVEKIT_SECRET: "${LIVEKIT_API_SECRET}"
+      LIVEKIT_JWT_PORT: "8080"
+      # Verify the caller really is who they say via the homeserver's OpenID
+      # federation - stops a stranger from grabbing a token for your room.
+      LIVEKIT_FULL_ACCESS_HOMESERVERS: "${MATRIX_DOMAIN}"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/healthz >/dev/null 2>&1 || wget -qO- http://localhost:8080/ >/dev/null 2>&1 || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  livekit:
+    <<: *restart
+    image: livekit/livekit-server:latest
+    command: --config /etc/livekit.yaml
+    volumes:
+      - ./livekit.yaml:/etc/livekit.yaml:ro
+    # LiveKit needs a wide UDP range for media; host networking is by far the
+    # least painful way to get that plus the TCP/TURN fallback working.
+    network_mode: host
+
+  coturn:
+    <<: *restart
+    image: coturn/coturn:latest
+    network_mode: host
+    volumes:
+      - ./coturn/turnserver.conf:/etc/coturn/turnserver.conf:ro
+
+  caddy:
+    <<: *restart
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    # `livekit` and `coturn` run with `network_mode: host` (see below), so
+    # from Caddy's own bridge-networked container `127.0.0.1` means
+    # Caddy's OWN loopback, never the host's - that reverse_proxy target
+    # would never work, host firewall or not. `host.docker.internal` (this
+    # extra_hosts entry is what makes it resolve on Linux; Docker Desktop
+    # provides it automatically) is the portable way to reach the host from
+    # here, used by the Caddyfile's LiveKit block.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./caddy/site:/srv:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      # Without this, the Caddyfile's `email {$ACME_EMAIL}` directive
+      # resolves to an empty string, which is a Caddyfile syntax error -
+      # Caddy refuses to start at all, on every deployment (found by an
+      # actual local run: this was the very first crash-loop hit).
+      ACME_EMAIL: ${ACME_EMAIL}
+      MATRIX_DOMAIN: ${MATRIX_DOMAIN}
+      APEX_DOMAIN: ${APEX_DOMAIN}
+      LIVEKIT_DOMAIN: ${LIVEKIT_DOMAIN}
+      LK_JWT_DOMAIN: ${LK_JWT_DOMAIN}
+      MAS_DOMAIN: ${MAS_DOMAIN}
+      ADMIN_DOMAIN: ${ADMIN_DOMAIN}
+    depends_on:
+      synapse:
+        condition: service_healthy
+      lk-jwt:
+        condition: service_started
+
+  # ---- optional: QR-code login (Matrix Authentication Service) ----
+  mas:
+    <<: *restart
+    profiles: ["mas"]
+    image: ghcr.io/element-hq/matrix-authentication-service:latest
+    command: server
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./mas/config.yaml:/config.yaml:ro
+    environment:
+      MAS_CONFIG: /config.yaml
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/health >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  # ---- optional: web admin UI ----
+  synapse-admin:
+    <<: *restart
+    profiles: ["admin"]
+    image: ghcr.io/etkecc/synapse-admin:latest
+    environment:
+      REACT_APP_SERVER: "https://${MATRIX_DOMAIN}"
+    depends_on:
+      synapse:
+        condition: service_healthy
+    healthcheck:
+      # etkecc/synapse-admin serves on 8080 (a static-web-server process).
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/ >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  # ---- optional: serve the JorKonvo web build at the apex domain ----
+  # `docker compose --profile webapp up -d --build` builds the app from the
+  # repo (context is the repo root) - no manual `npm run build` + copy step.
+  webapp:
+    <<: *restart
+    profiles: ["webapp"]
+    build:
+      context: ..
+      dockerfile: deploy/webapp/Dockerfile
+    image: jorkonvo/webapp:local
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8081/ >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres:
+  synapse_media:
+  caddy_data:
+  caddy_config:

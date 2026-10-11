@@ -1,0 +1,48 @@
+{
+ "session_id": "zQDSTshLXyDdOuZVw4JpWBFMo015jHjC0dWoHd/E4zE",
+ "exports": {
+  "0": "AQAAAADX2iS1YNAWWHLMhk2eiV50FGLr1WIgjmmivRHMTp5K8yRzWtM2XYyqtIWF0Uk2JGSkPhizbAwTKdM7F31sylMn3Pt2NnGIVC+dXZT4rXGP3ZBJPUG1ikQ4HlplkV9c7ppIfO02rHfWEo76N+pMlF22cdZ7kK0InqoH0MPr6W47h80A0k7IS18g3TrmVcOCaVgRTKNNeYx4wtHVqB3fxOMx",
+  "2": "AQAAAALX2iS1YNAWWHLMhk2eiV50FGLr1WIgjmmivRHMTp5K8yRzWtM2XYyqtIWF0Uk2JGSkPhizbAwTKdM7F31sylMn3Pt2NnGIVC+dXZT4rXGP3ZBJPUG1ikQ4HlplkV9c7pri32t3skArXZocoTdkKO657D5E2XIf/jKIblYOUJI5fs0A0k7IS18g3TrmVcOCaVgRTKNNeYx4wtHVqB3fxOMx",
+  "256": "AQAAAQDX2iS1YNAWWHLMhk2eiV50FGLr1WIgjmmivRHMTp5K8yRzWtM2XYyqtIWF0Uk2JGSkPhizbAwTKdM7F31sylMnEBdiTqq/bOZUUxv6x/jKyAIqIZ9nuQ3hzPYBkdTbVbOrd38YbWj84Ho/sIQIZBPJchDaUw57dPl1Oc7jbEbrj80A0k7IS18g3TrmVcOCaVgRTKNNeYx4wtHVqB3fxOMx",
+  "65536": "AQABAADX2iS1YNAWWHLMhk2eiV50FGLr1WIgjmmivRHMTp5K81wrUvWtoHTANmvE6JffP45ZCU2lJHuPhCJe5KUK3zmy3X1FnF0u5NxENFaYhASt2ecngYIYE5fVBNdS7uimkE/C0JJH/BM+MtM9OBZpKTTnkKMlzVoQWh2D9UCbmMTsms0A0k7IS18g3TrmVcOCaVgRTKNNeYx4wtHVqB3fxOMx"
+ },
+ "messages": {
+  "0": {
+   "ciphertext": "AwgAEoABX2TLwSwSSJap5tdyRNuxkAbmDXWqYzW/J302lgiAymAHC1MiWl5swqcyuQc6eNQHrznkln2iAjW1ZL89dBRvP2YjH+nWWt1fvhzYhohC+HSPjqE/SjGkdAHz9R1FLvpNRNYaf78o6RGnVQ4Aja0mkRqXtW+VwQQ5nIvy12z4pf6oagwich7RjE/W1GzjUYGG/xeagVEYYDqnm0cl08k2dEUnNpmeR0gonRPwRDtoK+kU/mSkHzuRoWRC11J1HXVaLnOo8axv4AU",
+   "plaintext": "{\"type\": \"m.room.message\", \"room_id\": \"!r:example.org\", \"content\": {\"msgtype\": \"m.text\", \"body\": \"üzenet #0 – héllo\"}}"
+  },
+  "1": {
+   "ciphertext": "AwgBEoABd2Gp61FmeLftB/WKNuSo+lAoiiMfi7l1GzI+gq4aTXfGWQXEJtR8zZDV8T07b5I70i4UK3kcBae8w3cmpHiu0hDR4U5S1V81C14dUPMnnih/M7f8ZixreiFVIvt7IOnqmAcYzQPw8odO8s/re+Ds7bl72CN372X3HqV6v5GFXKg2rXoVpg/ZRfMkf/p3yy3ZVtXlb44v9P/s8rON8qoo4T/wOLIMQ4HvDMv3Bhd0jUMHRmPpPekdU8tVOQClQo4+d54vTsiHfAE",
+   "plaintext": "{\"type\": \"m.room.message\", \"room_id\": \"!r:example.org\", \"content\": {\"msgtype\": \"m.text\", \"body\": \"üzenet #1 – héllo\"}}"
+  },
+  "2": {
+   "ciphertext": "AwgCEoAB6KdrZSOFw81Z1KdYaVu8z9K4VEVtqjgxo0VMCQCfkqFQtxvhRBvHCuzBTKEvSyj7CGcNbbtMuh9nSB9ApzVCutL9EMYOoeBPEiF93ILlhm3QvLnn5BQ2gFao6GZSWnCdWrbBgokR9Z6jOMpaCjBRHU9v+g6AeJHjJgm/wwThOuQuCqYTnsOLQi1z17KZUSYuSRrXZNtyKAc10lZs5tQuBeuIktjZrriKc3ccFsT8ulgVKTmy9RGSPiPNVovejWpsrVwl7rPrmwo",
+   "plaintext": "{\"type\": \"m.room.message\", \"room_id\": \"!r:example.org\", \"content\": {\"msgtype\": \"m.text\", \"body\": \"üzenet #2 – héllo\"}}"
+  },
+  "255": {
+   "ciphertext": "Awj/ARKAAQZDs0326ItfyIzTODlzi55WOE67VJcJAcfj2y9hRHdJJbN95eknJO/8WUsga0CUNQQtHPxC9k16ERS6YR6KyWWeiFFlrDiPlG5o9MrGVWar5lG6vQZqqJHbwhh9zoxJlyjJhybfbalUxBhHdBtoYM+OLdPKdnU96o/gh01pWFTHHZkzR/l8rfQt9UpUnhswk2iPfqMpsntJnv5X3zPC02Je7XnzjenWufQnoGx6vsTo4kGqAGVu5qne/xvy9FMOVvZ1cKAh/poA",
+   "plaintext": "{\"type\": \"m.room.message\", \"room_id\": \"!r:example.org\", \"content\": {\"msgtype\": \"m.text\", \"body\": \"üzenet #255 – héllo\"}}"
+  },
+  "256": {
+   "ciphertext": "AwiAAhKAATcVpFisyGI9VzhkULhiK78i9Q6n0B4Yr3160kSkFNymJYhZWUUkv1y3/so3m7Ri2LCjf2d4v108ixokqRlORzG1GFsphiUv8FDYcLVHmpjHJyNTouxXsxXml6GZ2qvqTBZIGDv+rzwSiPgjCmetpgzCwTikQbBnlQuXRcDVLZ3H/vdzGR5Bp1Xbi50n4fT7h5t6bPkbfXSiM8l5G2kC5B+Bf1raI2sssczxSQpRH5YWRr4vDCHgTBEJdCxP5NZ+unlwA4rfsJoB",
+   "plaintext": "{\"type\": \"m.room.message\", \"room_id\": \"!r:example.org\", \"content\": {\"msgtype\": \"m.text\", \"body\": \"üzenet #256 – héllo\"}}"
+  },
+  "257": {
+   "ciphertext": "AwiBAhKAARlZocD5kUxl7MzynJpcGa3Syu5BCWBEo+uxk0bWsLZxgMwmgqN5kY0L9NMBuFHq81m1xT9dBl8fQTM1CcjBuPP+3bB/L3LoJ5iPh1XlaCaBE/j9+hxcrBVBevU6azqW3CRC2oYXRClL3Wj+scEOCr/FTsgS5m1nKLD1jV1aigeesom2DNQYVNmr7o8m8+3QGvuOAuaRu15sVUeziHLbJ5cd3kehuIR/4yQDcxEF1kIVsmO7s7dBgH+GHKp/OfdCFuuyzcWiSTQI",
+   "plaintext": "{\"type\": \"m.room.message\", \"room_id\": \"!r:example.org\", \"content\": {\"msgtype\": \"m.text\", \"body\": \"üzenet #257 – héllo\"}}"
+  },
+  "65535": {
+   "ciphertext": "Awj//wMSgAESizqmmmy0qTOUBm5Fx3JikUnJE/FB0Yj5//+3R/+2kqKegD5Z8DiuARUJm09Pt+LDH0Oal6sHn/1npFNX5B47r1GVveJNOUpcmax/O+FynJxfOXnvYOa6f/Fy4YwKzBu2p+cRiYCKxYZprlecC5bXLsjWy+5hqANMJdlSyh804zWNnXhY6pnVOyh6zg4PVN/UUwwq9mWO+eWkqhd2QgT37EVw9vgbw08cdVKtgcu/boHXbhAXKn+AdEVL4IRUzV11pXpF/ISmDQ",
+   "plaintext": "{\"type\": \"m.room.message\", \"room_id\": \"!r:example.org\", \"content\": {\"msgtype\": \"m.text\", \"body\": \"üzenet #65535 – héllo\"}}"
+  },
+  "65536": {
+   "ciphertext": "AwiAgAQSgAEj7f8I/oqelos4ccbdxZBxRKyfbDcNdXMSMD6Y9N2enx9uStQQa1SlTqif5YIugzBqandtIZZ4sZP1wSqTm8gbY0cF74cDqer+UE13oFxgODEjPTG19mBgHXqmSRictn/OAJG1d8LL8Uw//95iJZTlcj5WpIrxwncF7nFkWNat8cPW4htvwyAhtHd2AIjKR9kuIBcmhfppNA10KrXc8xhfJ3a0DbXqAMgKsdXVo43EfYF4xiAROIWvwYe53Q1hxfXxjoBIlEUdCw",
+   "plaintext": "{\"type\": \"m.room.message\", \"room_id\": \"!r:example.org\", \"content\": {\"msgtype\": \"m.text\", \"body\": \"üzenet #65536 – héllo\"}}"
+  },
+  "70000": {
+   "ciphertext": "AwjwogQSgAEdglRAET9R6khrxSPI9l3yCMaVsrHCZ9CFVuBS3d9OSnYvNiLNJdSdTKHSV4MfzGPu4rJBz+nu0EinLADXAfa52xTR0np9Sp9QQ4ZScMYdLFTnPk5NQqGmUJaOwhuA6j35gtst+rSj+v2xgWbLEqD8ISipbvMg8l4iyg1jsfVB8grdkWRxg2fOqMeidVHW1yPBB4TXg6W1PX5gSZxz1+23ldfwflFscoevri7tGBJ+atPiwc/zPLyLscmWHKZc+8EyZpq8JNc/AQ",
+   "plaintext": "{\"type\": \"m.room.message\", \"room_id\": \"!r:example.org\", \"content\": {\"msgtype\": \"m.text\", \"body\": \"üzenet #70000 – héllo\"}}"
+  }
+ },
+ "tampered_index1": "AwgBEoABd2Gp61BmeLftB/WKNuSo+lAoiiMfi7l1GzI+gq4aTXfGWQXEJtR8zZDV8T07b5I70i4UK3kcBae8w3cmpHiu0hDR4U5S1V81C14dUPMnnih/M7f8ZixreiFVIvt7IOnqmAcYzQPw8odO8s/re+Ds7bl72CN372X3HqV6v5GFXKg2rXoVpg/ZRfMkf/p3yy3ZVtXlb44v9P/s8rON8qoo4T/wOLIMQ4HvDMv3Bhd0jUMHRmPpPekdU8tVOQClQo4+d54vTsiHfAE"
+}

@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "dev.szabotar.jorkonvo",
+      "sha256_cert_fingerprints": [
+        "C4:DB:5F:65:AC:E2:8D:43:B1:B0:4D:FF:43:B2:E7:DA:C9:79:22:10:9F:4A:00:1E:7D:7C:98:8A:91:75:CA:CC",
+        "9B:B2:24:7C:9A:D6:1C:75:7A:86:F1:19:C1:26:E4:F6:A1:C3:E6:63:23:04:99:BF:EF:82:AB:73:1B:67:0E:BD"
+      ]
+    }
+  }
+]

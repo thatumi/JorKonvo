@@ -1,0 +1,32 @@
+# Sygnal - the Matrix push gateway for every JorKonvo platform:
+# APNs (iOS), FCM v1 (Android) and Web Push (browser), one process.
+#
+# Deploy (jorbox: ~/sygnal):
+#   1. copy this file + sygnal.example.yaml there, rename the latter to
+#      sygnal.yaml and fill in the placeholders
+#   2. put the secrets in ./secrets (chmod 700 dir, 600 files) - see README.md
+#   3. docker compose up -d
+#   4. reverse proxy https://push.szabotar.dev -> http://127.0.0.1:5000
+#      (Nginx Proxy Manager on jorbox)
+#
+# The homeserver needs NO configuration change: each client registers an
+# HTTP pusher whose data.url is https://push.szabotar.dev/_matrix/push/v1/notify.
+services:
+  sygnal:
+    image: matrixdotorg/sygnal:v0.15.1
+    container_name: sygnal
+    restart: unless-stopped
+    environment:
+      SYGNAL_CONF: /sygnal/sygnal.yaml
+    volumes:
+      - ./sygnal.yaml:/sygnal/sygnal.yaml:ro
+      - ./secrets:/secrets:ro
+    ports:
+      - "127.0.0.1:5000:5000"
+    # Sygnal logs push tokens + room/event ids (never message text) for
+    # troubleshooting. Keep that short-lived: the privacy policy says so.
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

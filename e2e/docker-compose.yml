@@ -1,0 +1,42 @@
+# Disposable Synapse (+ a TLS front) for the Playwright end-to-end suite.
+# Brought up by e2e/scripts/up.sh, torn down by e2e/scripts/down.sh.
+# NOT for production - see e2e/synapse/homeserver.yaml for why.
+#
+# The Caddy front exists so the app talks to an https:// homeserver, exactly
+# as it must in production (the built CSP only allows connect-src https:).
+# The cert is Caddy's internal CA - Playwright runs with ignoreHTTPSErrors.
+services:
+  synapse:
+    build: ./synapse
+    image: jorkonvo-e2e-synapse:latest
+    command: run
+    environment:
+      SYNAPSE_SERVER_NAME: localhost
+      SYNAPSE_REPORT_STATS: "no"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8008/health').status==200 else 1)\""]
+      interval: 3s
+      timeout: 5s
+      retries: 40
+      start_period: 5s
+
+  caddy:
+    build: ./caddy
+    image: jorkonvo-e2e-caddy:latest
+    depends_on:
+      synapse:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:18448:443"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "--no-check-certificate", "https://localhost/health"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
+
+# Fixed network name so a docker-outside-of-docker CI job can `docker network
+# connect` itself to the stack and reach Caddy as `https://caddy` (the
+# published 127.0.0.1:18448 lives on the host's loopback, not the job's).
+networks:
+  default:
+    name: jorkonvo-e2e-net

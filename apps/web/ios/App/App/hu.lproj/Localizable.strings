@@ -1,0 +1,38 @@
+/* Push-értesítések szövege. A Sygnal APNs pushkinje csak loc-key +
+   loc-args párt küld (services/sygnal/README.md), a szöveget az iOS
+   innen rakja össze. Az argumentumok sorrendje a Sygnalé; mindegyiknek
+   benne kell maradnia, mert az iOS pozíció szerint helyettesít.
+   Titkosított eseménynek nincs szövege: MSG_FROM_USER[_IN_ROOM]-ként jön. */
+
+/* [feladó, szoba, szöveg] */
+"MSG_FROM_USER_IN_ROOM_WITH_CONTENT" = "%1$@ (%2$@): %3$@";
+/* [feladó, szöveg] */
+"MSG_FROM_USER_WITH_CONTENT" = "%1$@: %2$@";
+/* [feladó, szoba] - titkosított üzenet (vagy szöveg nélküli esemény) */
+"MSG_FROM_USER_IN_ROOM" = "%1$@ (%2$@): Titkosított üzenet";
+/* [feladó] */
+"MSG_FROM_USER" = "%1$@: Titkosított üzenet";
+
+/* [feladó, fájlnév, szoba] */
+"IMAGE_FROM_USER_IN_ROOM" = "%1$@ (%3$@): 🖼 %2$@";
+/* [feladó, fájlnév] */
+"IMAGE_FROM_USER" = "%1$@: 🖼 %2$@";
+
+/* [szoba, feladó, művelet] - /me */
+"ACTION_FROM_USER_IN_ROOM" = "* %2$@ %3$@ (%1$@)";
+/* [feladó, művelet] */
+"ACTION_FROM_USER" = "* %1$@ %2$@";
+
+/* [hívó] */
+"VOICE_CALL_FROM_USER" = "📞 %1$@ hív";
+"VIDEO_CALL_FROM_USER" = "📹 %1$@ videóhívást indított";
+
+/* [meghívó, szoba] */
+"USER_INVITE_TO_NAMED_ROOM" = "%1$@ meghívott ide: %2$@";
+/* [meghívó] */
+"USER_INVITE_TO_CHAT" = "%1$@ meghívott egy beszélgetésbe";
+
+/* Push 2. fázis (event_id_only pusher): csak ez az alert + a szoba/esemény
+   azonosító érkezik; a NotificationService extension cseréli le a feladóra
+   és a szövegre. Ha nem tudja ("rejtett" előnézet, offline), ez látszik. */
+"JK_NEW_MESSAGE" = "Új üzenet";

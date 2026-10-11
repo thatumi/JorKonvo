@@ -1,0 +1,80 @@
+# Configuration file for Synapse.
+#
+# This is a YAML file: see [1] for a quick introduction. Note in particular
+# that *indentation is important*: all the elements of a list or dictionary
+# should have the same indentation.
+#
+# [1] https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html
+#
+# For more information on how to configure Synapse, including a complete accounting of
+# each option, go to docs/usage/configuration/config_documentation.md or
+# https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html
+server_name: "localhost"
+pid_file: /data/homeserver.pid
+listeners:
+  - port: 8008
+    tls: false
+    type: http
+    x_forwarded: true
+    resources:
+      - names: [client, federation]
+        compress: false
+database:
+  name: sqlite3
+  args:
+    database: /data/homeserver.db
+log_config: "/data/log.config"
+media_store_path: /data/media_store
+registration_shared_secret: "Ml-PsUd#h~mr:ldaQHpZImpx9UlCtARUWFmqQ~SSMrLjfX_Rdd"
+report_stats: false
+macaroon_secret_key: "hs@*0wo4StC.*aafFPMz&zorS7KC&b+UF4pL*G*wX0:pkap,C+"
+form_secret: "7bL;rlgR6Q-TDvZ1ZjhuGw4EJ0;pkBx&eh@LiWwRwkQJQUbhac"
+signing_key_path: "/data/localhost.signing.key"
+trusted_key_servers:
+  - server_name: "matrix.org"
+
+
+# vim:ft=yaml
+# ── E2E test overrides ────────────────────────────────────────────────────
+# This homeserver is DISPOSABLE and only ever reachable on localhost during
+# `npm run test:e2e`. The secrets above are committed on purpose - they
+# guard nothing. Everything below trades security for test throughput.
+enable_registration: true
+enable_registration_without_verification: true
+registration_requires_token: false
+
+# matrix-js-sdk's rust-crypto wants a working key backup / SSSS path; keep
+# the defaults but make sure nothing rate-limits a burst of test logins,
+# registrations, room creations or messages.
+rc_message:
+  per_second: 1000
+  burst_count: 1000
+rc_registration:
+  per_second: 1000
+  burst_count: 1000
+rc_login:
+  address: { per_second: 1000, burst_count: 1000 }
+  account: { per_second: 1000, burst_count: 1000 }
+  failed_attempts: { per_second: 1000, burst_count: 1000 }
+rc_admin_redaction:
+  per_second: 1000
+  burst_count: 1000
+rc_joins:
+  local: { per_second: 1000, burst_count: 1000 }
+  remote: { per_second: 1000, burst_count: 1000 }
+rc_invites:
+  per_room: { per_second: 1000, burst_count: 1000 }
+  per_user: { per_second: 1000, burst_count: 1000 }
+rc_3pid_validation:
+  per_second: 1000
+  burst_count: 1000
+rc_key_requests:
+  per_second: 1000
+  burst_count: 1000
+
+# Deterministic, fast: no background federation retries to the outside world.
+federation_domain_whitelist: []
+suppress_key_server_warning: true
+
+# Let the client create encrypted rooms and short-circuit some slow paths.
+encryption_enabled_by_default_for_room_type: "off"

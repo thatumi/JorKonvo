@@ -1,0 +1,22 @@
+# Static marketing/download site for JorKonvo.
+# Matches the homelab's /opt/stacks/<project>/compose.yaml pattern (see
+# [[homelab-docker-arcane]] memory / Arcane). To deploy:
+#   1. Symlink or copy this directory to /opt/stacks/jorkonvo-site/
+#   2. `docker compose up -d --build` (or let Arcane pick it up)
+#   3. Add an Nginx Proxy Manager host pointing at jorkonvo-site:80, on
+#      whatever subdomain you pick (suggested: a NEW one, not
+#      jorkonvo.szabotar.dev - that domain already serves the live app
+#      itself; something like home.jorkonvo.szabotar.dev or
+#      www.jorkonvo.szabotar.dev works with the existing `*.szabotar.dev`
+#      wildcard DNS record with zero extra DNS changes).
+#
+# The download buttons link to Forgejo release assets at
+# git.szabotar.dev/thatumi/JorKonvo/releases/... - those links only work
+# once the JorKonvo repo is public (tracked separately in .hub/status.json).
+services:
+  jorkonvo-site:
+    build: .
+    container_name: jorkonvo-site
+    restart: unless-stopped
+    networks:
+      - default

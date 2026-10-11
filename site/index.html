@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JorKonvo — Discord-style chat on the open Matrix protocol</title>
+<meta name="description" content="JorKonvo is a Discord-style chat client for Matrix: spaces, channels, voice &amp; video calls, end-to-end encryption. Use any server, or your own." />
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <div class="brand"><img src="assets/favicon.svg" alt="" /> JorKonvo</div>
+    <nav class="links">
+      <a href="#features" data-i18n-hide-hu>Features</a>
+      <a href="#features" data-i18n-hide-en>Funkciók</a>
+      <a href="#download" data-i18n-hide-hu>Download</a>
+      <a href="#download" data-i18n-hide-en>Letöltés</a>
+      <a href="privacy.html" data-i18n-hide-hu>Privacy</a>
+      <a href="privacy.html" data-i18n-hide-en>Adatvédelem</a>
+      <a href="https://git.szabotar.dev/thatumi/JorKonvo" target="_blank" rel="noopener">Source</a>
+    </nav>
+    <div class="nav-controls">
+      <button class="pill-btn" id="theme-toggle" type="button" aria-label="Toggle theme">◐</button>
+      <button class="pill-btn" id="lang-toggle" type="button">HU</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-text">
+      <span class="eyebrow"><span class="dot"></span>
+        <span data-i18n-hide-hu>Open source · Matrix protocol</span>
+        <span data-i18n-hide-en>Nyílt forráskódú · Matrix protokoll</span>
+      </span>
+      <h1 data-i18n-hide-hu>Discord-style chat.<br>An <span class="accent">open</span> protocol underneath.</h1>
+      <h1 data-i18n-hide-en>Discord-stílusú csevegés.<br><span class="accent">Nyílt</span> protokollon.</h1>
+      <p class="lede" data-i18n-hide-hu>Spaces, channels, voice and video calls, end-to-end encryption — on Matrix, the open chat protocol. No single company owns the network: sign in with any server, or run your own.</p>
+      <p class="lede" data-i18n-hide-en>Terek, szobák, hang- és videóhívások, végpontok közötti titkosítás — a Matrixon, a nyílt csevegési protokollon. A hálózatot nem egyetlen cég birtokolja: bármely szerverrel bejelentkezhetsz, vagy futtathatsz sajátot.</p>
+      <div class="cta-row">
+        <a href="#download" class="btn btn-primary">
+          <span data-i18n-hide-hu>Download JorKonvo</span>
+          <span data-i18n-hide-en>JorKonvo letöltése</span>
+        </a>
+        <a href="https://app.jorkonvo.com" class="btn btn-ghost" target="_blank" rel="noopener">
+          <span data-i18n-hide-hu>Open the web app →</span>
+          <span data-i18n-hide-en>Webapp megnyitása →</span>
+        </a>
+      </div>
+    </div>
+    <div class="hero-shot">
+      <img id="hero-shot-img" src="assets/screenshot-dark.png" alt="JorKonvo sign-in screen" />
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 data-i18n-hide-hu>Everything a Discord-style community needs</h2>
+      <h2 data-i18n-hide-en>Minden, amire egy Discord-stílusú közösségnek szüksége van</h2>
+      <p data-i18n-hide-hu>Familiar on the surface. Fully end-to-end encrypted where it counts.</p>
+      <p data-i18n-hide-en>Felületen ismerős. Ahol számít, végig titkosított.</p>
+    </div>
+    <div class="grid-features">
+      <div class="card">
+        <div class="icon">💬</div>
+        <h3 data-i18n-hide-hu>Spaces &amp; channels</h3>
+        <h3 data-i18n-hide-en>Terek és szobák</h3>
+        <p data-i18n-hide-hu>Threads, reactions, polls, @mentions, edit &amp; delete, forwarding, file and image sharing with link previews.</p>
+        <p data-i18n-hide-en>Szálak, reakciók, szavazások, @említések, szerkesztés/törlés, továbbítás, kép-/fájlmegosztás URL-előnézetekkel.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🔒</div>
+        <h3 data-i18n-hide-hu>End-to-end encryption</h3>
+        <h3 data-i18n-hide-en>Végpontok közötti titkosítás</h3>
+        <p data-i18n-hide-hu>Matrix's standard encryption (rust-crypto), emoji device verification, and recovery-key encrypted backup.</p>
+        <p data-i18n-hide-en>A Matrix szabványos titkosítása (rust-crypto), emoji-alapú eszközellenőrzés, recovery key-vel titkosított mentés.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🎙️</div>
+        <h3 data-i18n-hide-hu>Voice, video &amp; screen share</h3>
+        <h3 data-i18n-hide-en>Hang, videó és képernyőmegosztás</h3>
+        <p data-i18n-hide-hu>1:1 peer-to-peer calls, always-on voice channels, group calls, noise suppression and push-to-talk.</p>
+        <p data-i18n-hide-en>1:1 peer-to-peer hívások, állandó hangcsatornák, csoportos hívások, zajszűrés és push-to-talk.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🛡️</div>
+        <h3 data-i18n-hide-hu>Roles &amp; moderation</h3>
+        <h3 data-i18n-hide-en>Szerepkörök és moderáció</h3>
+        <p data-i18n-hide-hu>Named, colored roles with permissions, slowmode, keyword automod, audit log, invite links and QR codes.</p>
+        <p data-i18n-hide-en>Nevesített, színezett szerepkörök jogosultságokkal, lassított mód, kulcsszavas automod, naplózás, meghívólinkek és QR-kódok.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🌐</div>
+        <h3 data-i18n-hide-hu>Any server, or your own</h3>
+        <h3 data-i18n-hide-en>Bármely szerver, vagy a sajátod</h3>
+        <p data-i18n-hide-hu>No single JorKonvo server everyone has to use. Sign in anywhere on Matrix, or self-host your own homeserver.</p>
+        <p data-i18n-hide-en>Nincs egyetlen közös JorKonvo-szerver. Bejelentkezhetsz bárhova a Matrixon, vagy futtathatsz saját szervert.</p>
+      </div>
+      <div class="card">
+        <div class="icon">📱</div>
+        <h3 data-i18n-hide-hu>Everywhere you are</h3>
+        <h3 data-i18n-hide-en>Minden eszközödön</h3>
+        <p data-i18n-hide-hu>One codebase: web, desktop (Windows/Linux/macOS) and Android, with iOS on the way. Multiple accounts at once.</p>
+        <p data-i18n-hide-en>Egy kódbázis: web, asztali (Windows/Linux/macOS) és Android, hamarosan iOS-szel. Több fiók egyszerre.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="matrix">
+  <div class="wrap">
+    <div class="matrix-note">
+      <div class="glyph">ⓘ</div>
+      <div>
+        <h3 data-i18n-hide-hu>What is Matrix, and why does it matter?</h3>
+        <h3 data-i18n-hide-en>Mi az a Matrix, és miért számít?</h3>
+        <p data-i18n-hide-hu>Matrix is an open, decentralized chat protocol — think of it like email, but for chat. JorKonvo doesn't run the one server everyone must use; the sign-in screen defaults to <code>matrix.org</code>, with <code>matrix.tchncs.de</code> offered as a second public option, and the server field is always freely editable. Whoever runs your homeserver is your actual data controller — see the <a href="privacy.html">privacy policy</a> for exactly what they can and can't see.</p>
+        <p data-i18n-hide-en>A Matrix egy nyílt, decentralizált csevegési protokoll — olyasmi, mint az email, csak csevegéshez. A JorKonvo nem üzemeltet egyetlen kötelező szervert; a bejelentkező képernyő alapértelmezetten a <code>matrix.org</code>-ot ajánlja, a <code>matrix.tchncs.de</code> egy második nyilvános lehetőség, és a szerver-mező mindig szabadon szerkeszthető. Amelyik szervert használod, annak üzemeltetője a tényleges adatkezelőd — pontosan mit lát, azt az <a href="privacy.html">adatvédelmi tájékoztatóban</a> írjuk le.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="download">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 data-i18n-hide-hu>Download</h2>
+      <h2 data-i18n-hide-en>Letöltés</h2>
+      <p data-i18n-hide-hu>Early, actively developed releases. The web app always has the latest version — no install needed.</p>
+      <p data-i18n-hide-en>Korai, aktívan fejlesztett kiadások. A webapp mindig a legfrissebb verziót futtatja — telepítés nélkül.</p>
+    </div>
+    <div class="grid-downloads">
+
+      <div class="dl-card">
+        <div class="platform-head"><span class="platform-icon">🌐</span><h3 data-i18n-hide-hu>Web</h3><h3 data-i18n-hide-en>Webböngésző</h3></div>
+        <p class="status" data-i18n-hide-hu>Works today, always up to date</p>
+        <p class="status" data-i18n-hide-en>Már elérhető, mindig naprakész</p>
+        <div class="dl-links">
+          <a class="dl-link" href="https://app.jorkonvo.com" target="_blank" rel="noopener">
+            <span data-i18n-hide-hu>Open app.jorkonvo.com</span>
+            <span data-i18n-hide-en>app.jorkonvo.com megnyitása</span>
+            <span class="arrow">↗</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="dl-card">
+        <div class="platform-head"><span class="platform-icon">🐧</span><h3>Linux</h3></div>
+        <p class="status" data-i18n-hide-hu>v0.1.3 — prerelease</p>
+        <p class="status" data-i18n-hide-en>v0.1.3 — előzetes kiadás</p>
+        <div class="dl-links">
+          <a class="dl-link" href="https://git.szabotar.dev/thatumi/JorKonvo/releases/download/linux-v0.1.3/JorKonvo_0.1.3_amd64.AppImage">
+            <span>AppImage</span><span class="arrow">↓</span>
+          </a>
+          <a class="dl-link" href="https://git.szabotar.dev/thatumi/JorKonvo/releases/download/linux-v0.1.3/JorKonvo_0.1.3_amd64.deb">
+            <span>.deb</span><span class="arrow">↓</span>
+          </a>
+          <a class="dl-link" href="https://git.szabotar.dev/thatumi/JorKonvo/releases/download/linux-v0.1.3/dev.jorkonvo.desktop.flatpak">
+            <span>Flatpak</span><span class="arrow">↓</span>
+          </a>
+        </div>
+        <p class="dl-note" data-i18n-hide-hu>AUR (<code>jorkonvo-bin</code>) coming soon. All builds unsigned.</p>
+        <p class="dl-note" data-i18n-hide-en>AUR (<code>jorkonvo-bin</code>) hamarosan. Minden build aláíratlan.</p>
+      </div>
+
+      <div class="dl-card">
+        <div class="platform-head"><span class="platform-icon">🪟</span><h3>Windows</h3></div>
+        <p class="status" data-i18n-hide-hu>v0.1.3 — prerelease</p>
+        <p class="status" data-i18n-hide-en>v0.1.3 — előzetes kiadás</p>
+        <div class="dl-links">
+          <a class="dl-link" href="https://git.szabotar.dev/thatumi/JorKonvo/releases/download/windows-v0.1.3/JorKonvo_0.1.3_x64-setup.exe">
+            <span data-i18n-hide-hu>Installer (.exe)</span>
+            <span data-i18n-hide-en>Telepítő (.exe)</span>
+            <span class="arrow">↓</span>
+          </a>
+        </div>
+        <p class="dl-note beta" data-i18n-hide-hu>Unsigned — Windows SmartScreen will warn.</p>
+        <p class="dl-note beta" data-i18n-hide-en>Aláíratlan — a Windows SmartScreen figyelmeztetni fog.</p>
+      </div>
+
+      <div class="dl-card">
+        <div class="platform-head"><span class="platform-icon">🤖</span><h3>Android</h3></div>
+        <p class="status beta" data-i18n-hide-hu>Coming soon — Play Store &amp; F-Droid</p>
+        <p class="status beta" data-i18n-hide-en>Hamarosan — Play Store és F-Droid</p>
+        <div class="dl-links">
+          <a class="dl-link" href="https://app.jorkonvo.com" target="_blank" rel="noopener">
+            <span data-i18n-hide-hu>Use the web app meanwhile</span>
+            <span data-i18n-hide-en>Addig is a webapp</span>
+            <span class="arrow">↗</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="dl-card">
+        <div class="platform-head"><span class="platform-icon">🍎</span><h3>iPhone &amp; iPad</h3></div>
+        <p class="status beta" data-i18n-hide-hu>Coming soon — TestFlight</p>
+        <p class="status beta" data-i18n-hide-en>Hamarosan — TestFlight</p>
+        <div class="dl-links">
+          <a class="dl-link" href="https://app.jorkonvo.com" target="_blank" rel="noopener">
+            <span data-i18n-hide-hu>Use the web app meanwhile</span>
+            <span data-i18n-hide-en>Addig is a webapp</span>
+            <span class="arrow">↗</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="dl-card">
+        <div class="platform-head"><span class="platform-icon">🧩</span><h3 data-i18n-hide-hu>Source code</h3><h3 data-i18n-hide-en>Forráskód</h3></div>
+        <p class="status" data-i18n-hide-hu>Open source, build it yourself</p>
+        <p class="status" data-i18n-hide-en>Nyílt forráskód, magad is lefordíthatod</p>
+        <div class="dl-links">
+          <a class="dl-link" href="https://git.szabotar.dev/thatumi/JorKonvo" target="_blank" rel="noopener">
+            <span>Forgejo</span><span class="arrow">↗</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="links">
+      <a href="privacy.html" data-i18n-hide-hu>Privacy policy</a>
+      <a href="privacy.html" data-i18n-hide-en>Adatvédelem</a>
+      <a href="support.html" data-i18n-hide-hu>Support</a>
+      <a href="support.html" data-i18n-hide-en>Támogatás</a>
+      <a href="https://git.szabotar.dev/thatumi/JorKonvo" target="_blank" rel="noopener">Source</a>
+      <a href="mailto:szabotar@szabotar.dev">szabotar@szabotar.dev</a>
+    </div>
+    <div class="copy">© 2026 Tamás Szabó · JorKonvo</div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var html = document.documentElement;
+  var langBtn = document.getElementById("lang-toggle");
+  var themeBtn = document.getElementById("theme-toggle");
+  var heroShot = document.getElementById("hero-shot-img");
+
+  function applyLang(lang) {
+    html.setAttribute("lang", lang);
+    langBtn.textContent = lang === "hu" ? "EN" : "HU";
+    try { localStorage.setItem("jorkonvo-site-lang", lang); } catch (e) {}
+  }
+  function applyTheme(theme) {
+    html.setAttribute("data-theme", theme);
+    themeBtn.textContent = theme === "light" ? "◑" : "◐";
+    if (heroShot) heroShot.src = "assets/screenshot-" + theme + ".png";
+    try { localStorage.setItem("jorkonvo-site-theme", theme); } catch (e) {}
+  }
+
+  var storedLang, storedTheme;
+  try { storedLang = localStorage.getItem("jorkonvo-site-lang"); } catch (e) {}
+  try { storedTheme = localStorage.getItem("jorkonvo-site-theme"); } catch (e) {}
+
+  applyLang(storedLang || ((navigator.language || "").toLowerCase().startsWith("hu") ? "hu" : "en"));
+  applyTheme(storedTheme || (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"));
+
+  langBtn.addEventListener("click", function () {
+    applyLang(html.getAttribute("lang") === "hu" ? "en" : "hu");
+  });
+  themeBtn.addEventListener("click", function () {
+    applyTheme(html.getAttribute("data-theme") === "light" ? "dark" : "light");
+  });
+})();
+</script>
+
+</body>
+</html>

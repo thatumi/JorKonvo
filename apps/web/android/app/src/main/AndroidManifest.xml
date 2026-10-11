@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- allowBackup=false: the WebView's IndexedDB holds the rust-crypto
+         store (E2EE device keys, cross-signing secrets). Android auto-backup
+         would copy that to the user's Google account; an E2EE client should
+         re-establish trust on a new device, not silently restore keys. -->
+    <application
+        android:allowBackup="false"
+        android:usesCleartextTraffic="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation|density"
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBarLaunch"
+            android:launchMode="singleTask"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- Android App Link for JorKonvo's own invite-link domain (see
+                 packages/matrix-core/src/inviteLinks.ts). autoVerify=true
+                 makes Android silently confirm ownership via
+                 https://jorkonvo.szabotar.dev/.well-known/assetlinks.json
+                 (apps/web/public/.well-known/assetlinks.json) before it'll
+                 open the app directly instead of showing a browser/chooser -
+                 requires that file's sha256CertFingerprints to match
+                 whatever keystore actually signs the installed APK, so the
+                 debug-keystore fingerprint checked in there today needs
+                 replacing with the real upload keystore's once one exists
+                 (see docs/ANDROID.md "Release signing"), or verification
+                 will silently fail and this degrades to a chooser dialog. -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="https"
+                    android:host="jorkonvo.szabotar.dev"
+                    android:pathPrefix="/join" />
+            </intent-filter>
+
+            <!-- Best-effort matrix.to handling: JorKonvo doesn't control that
+                 domain, so this can never be android:autoVerify (no way to
+                 host assetlinks.json there) - Android will offer JorKonvo as
+                 one "Open with" option rather than opening it silently, but
+                 that's still strictly better than never appearing at all. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="matrix.to" />
+            </intent-filter>
+
+        </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
+
+        <!-- Screen sharing into the WebView (ScreenCapturePlugin +
+             ScreenCaptureService, docs/ANDROID_SCREENSHARE.md): the Android
+             WebView does not implement getDisplayMedia, so the JS polyfill
+             calls a MediaProjection-backed foreground service instead.
+             Android 10+ only lets MediaProjection run from inside a
+             mediaProjection-typed foreground service, and Android 14+
+             enforces that service being up BEFORE the projection is created. -->
+        <service
+            android:name=".ScreenCaptureService"
+            android:exported="false"
+            android:foregroundServiceType="mediaProjection" />
+        <!-- Background push (FCM data messages from services/sygnal):
+             JorKonvoMessagingService builds the notification itself, because
+             a data-only message is never displayed by Android and the
+             Capacitor plugin only forwards it to JS (not running while the
+             app is closed). Only ONE service may receive MESSAGING_EVENT, so
+             the plugin's own MessagingService is removed from the merged
+             manifest; ours hands tokens/messages to the plugin instead. -->
+        <service
+            android:name=".JorKonvoMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.capacitorjs.plugins.pushnotifications.MessagingService"
+            tools:node="remove" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="messages" />
+    </application>
+
+    <!-- Permissions -->
+
+    <!-- CAMERA/RECORD_AUDIO imply a hard hardware requirement in Play's device
+         filtering unless declared optional: without these, tablets / TV boxes /
+         Chromebooks with no camera or mic would be excluded from the listing
+         even though chat works fine there. -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+    <uses-feature android:name="android.hardware.microphone" android:required="false" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Voice/video calls (WebRTC getUserMedia inside the WebView) - Capacitor's
+         own BridgeWebChromeClient.onPermissionRequest already bridges a page's
+         getUserMedia request to a real Android runtime-permission prompt for
+         exactly these three, but only once they're DECLARED here; without this
+         a call would silently fail to get a camera/mic track with no obvious
+         error to the user. -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <!-- Android 13+ requires this to show ANY notification, even ones a page
+         raises via the Web Notification API. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Screen sharing (getDisplayMedia) runs as a real MediaProjection-backed
+         foreground service bridging into the WebView (ScreenCaptureService).
+         FOREGROUND_SERVICE is required for any foreground service pre-API 34;
+         FOREGROUND_SERVICE_MEDIA_PROJECTION is the API 34+ per-type companion
+         for the mediaProjection service type declared below. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+</manifest>

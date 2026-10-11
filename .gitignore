@@ -1,0 +1,43 @@
+node_modules/
+dist/
+*.tsbuildinfo
+dist-electron/
+release/
+build/
+.DS_Store
+*.log
+npm-debug.log*
+
+# env / secrets
+.env
+.env.local
+.env.*.local
+
+# editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# tauri
+apps/desktop/src-tauri/target/
+apps/desktop/src-tauri/gen/
+
+# capacitor / mobile
+# android/ and ios/ are BOTH tracked - they carry hand-edited native files
+# that `cap add` alone wouldn't reproduce (android: AndroidManifest camera/mic
+# perms; ios: Info.plist usage strings + export-compliance key). Each has its
+# own generated .gitignore inside the directory that already excludes the
+# build output, Pods/DerivedData/xcuserdata, copied web assets, and the
+# generated capacitor.config.json / config.xml. The iOS project is scaffolded
+# on Linux and built on a Mac (Codemagic) - no Mac needed to keep it in sync.
+
+# e2e (Playwright) - artefacts + the throwaway homeserver's runtime state
+e2e/test-results/
+e2e/playwright-report/
+e2e/.last-run.json
+test/coverage/
+
+# misc
+.cache/
+.turbo/
+.aider*

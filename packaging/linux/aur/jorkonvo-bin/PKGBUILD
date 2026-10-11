@@ -1,0 +1,72 @@
+# Maintainer: Tamás Szabó <szabotar@szabotar.dev>
+#
+# Repackages the AppImage from the Forgejo release. The AppImage is
+# self-contained (its own Chromium/CEF + libs via sharun), so this only
+# extracts it to /opt - no fuse2 needed, and startup is faster than a
+# mounted AppImage. Test with packaging/linux/aur/test-in-container.sh.
+pkgname=jorkonvo-bin
+_appname=JorKonvo
+pkgver=0.1.3
+pkgrel=1
+pkgdesc="Discord-style Matrix client (Tauri + Chromium/CEF desktop app)"
+arch=('x86_64')
+url="https://git.szabotar.dev/thatumi/JorKonvo"
+license=('custom:proprietary')   # see LICENSE in the repo root - redistributing the
+                                  # official binary unmodified is explicitly permitted
+# The bundle ships its own libraries; these are the host-side pieces it still
+# talks to (X11 session, GL driver, ALSA, fontconfig + at least one font: without
+# any font Skia aborts with "SkFontMgr_FontConfigInterface: Not implemented").
+# libxkbcommon-x11 (the X11/Xwayland keyboard integration companion to the
+# libxkbcommon.so.0 the bundle does ship) and nss (libcef.so's NEEDED entries
+# only cover libnss3/libnssutil3/libsmime3/libnspr4 - the PKCS#11 module NSS
+# loads on its own at runtime, libsoftokn3.so + libfreebl3.so/libfreeblpriv3.so,
+# is invisible to quick-sharun's NEEDED-chain-based bundling, so it's never
+# shipped) were both masked on every real desktop tested so far - already
+# transitive deps of virtually any desktop environment (compositor/WM for the
+# first, any browser/keyring integration for the second) - but a minimal
+# container with neither installed surfaced both real gaps: "Library
+# libxkbcommon-x11.so could not be loaded", then (once past that, with GPU
+# disabled to dodge the separate, already-documented ANGLE/EGL issue)
+# "libsoftokn3.so: cannot open shared object file" (fatal) from NSS's own init
+# (2026-10-09, AUR container test).
+depends=('hicolor-icon-theme' 'libx11' 'libxkbcommon-x11' 'mesa' 'alsa-lib' 'fontconfig' 'ttf-font' 'nss')
+optdepends=('pipewire-pulse: audio for calls'
+            'xdg-desktop-portal: screen sharing on Wayland')
+provides=('jorkonvo')
+conflicts=('jorkonvo')
+options=('!strip' '!debug')   # prebuilt binaries; stripping would only break them
+_appimage="${_appname}_${pkgver}_amd64.AppImage"
+source=("${_appimage}::${url}/releases/download/linux-v${pkgver}/${_appimage}"
+        "jorkonvo.desktop"
+        "jorkonvo.sh"
+        "LICENSE")
+noextract=("${_appimage}")
+sha256sums=('4ce9c398e173ac443840234f61ecb3efa49bba2029bc4658eda40c757cce9147'   # AppImage: dist/linux/SHA256SUMS - update on every release
+            '9475b756cd971ecfcaf79bd4bf36a38cf1add37ca3c2123259f35ed65c9a2001'
+            '7fa7e1ddfc4cc3a44fdcc841f9570de81bb6ed694551b81ab61b4adaaad6b6a1'
+            '86a7b68941a21983a46a402de1175ee8626ab535c68e7e7e855e786f1fc827be')
+
+prepare() {
+  chmod +x "${_appimage}"
+  ./"${_appimage}" --appimage-extract >/dev/null
+}
+
+package() {
+  install -d "${pkgdir}/opt/${pkgname}"
+  cp -a squashfs-root/. "${pkgdir}/opt/${pkgname}/"
+  # unsquashfs (--appimage-extract) creates every directory it unpacks as 0700
+  # (root-only traversal) - cp -a carries that mode straight onto the installed
+  # tree, which silently locks every non-root user out of the whole app
+  # (confirmed live: "sudo -u builder /opt/jorkonvo-bin/AppRun" ->
+  # "Permission denied", root-caused with namei -l to the 0700 directories, not
+  # a missing +x on AppRun itself - that part was always fine).
+  find "${pkgdir}/opt/${pkgname}" -type d -exec chmod 755 {} +
+  # The bundled hicolor dir is a copy of the build host's icon theme and carries
+  # unrelated icons (libreoffice, xarchiver ...). The system theme is used instead.
+  rm -rf "${pkgdir}/opt/${pkgname}/share/icons"
+
+  install -Dm755 jorkonvo.sh "${pkgdir}/usr/bin/jorkonvo"
+  install -Dm644 jorkonvo.desktop "${pkgdir}/usr/share/applications/jorkonvo.desktop"
+  install -Dm644 squashfs-root/JorKonvo.png "${pkgdir}/usr/share/icons/hicolor/512x512/apps/jorkonvo.png"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

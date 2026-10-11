@@ -1,0 +1,152 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: docker
+    # Needs a registered Forgejo Actions runner with a Node-capable image.
+    # See .hub/status.json "needs" if this job never starts.
+    container:
+      image: node:20-bookworm
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (matrix-core + web)
+        run: npm run build
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm test
+
+
+  android:
+    runs-on: docker
+    # Compiles the Capacitor Android project (debug APK) so native/Gradle
+    # breakage is caught on every push instead of by a manual local build.
+    # Needs JDK 21 (see docs/ANDROID.md) plus the Android SDK, both fetched
+    # below into the job container - no special runner features required.
+    needs: build-and-test
+    container:
+      image: node:22-bookworm
+    env:
+      ANDROID_HOME: /opt/android-sdk
+      ANDROID_SDK_ROOT: /opt/android-sdk
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install JDK 21 + unzip
+        run: |
+          set -eux
+          apt-get update
+          apt-get install -y --no-install-recommends unzip curl ca-certificates
+          curl -fsSL https://api.adoptium.net/v3/binary/latest/21/ga/linux/x64/jdk/hotspot/normal/eclipse -o /tmp/jdk.tgz
+          mkdir -p /opt/jdk21
+          tar -xzf /tmp/jdk.tgz -C /opt/jdk21 --strip-components=1
+          echo "JAVA_HOME=/opt/jdk21" >> "$GITHUB_ENV"
+          echo "/opt/jdk21/bin" >> "$GITHUB_PATH"
+
+      - name: Install Android SDK
+        run: |
+          set -eux
+          curl -fsSL https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -o /tmp/cmdline.zip
+          mkdir -p "$ANDROID_HOME/cmdline-tools"
+          unzip -q /tmp/cmdline.zip -d "$ANDROID_HOME/cmdline-tools"
+          mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" "platform-tools"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web bundle
+        run: npm run build
+
+      - name: Sync Capacitor
+        run: cd apps/web && npx cap sync android
+
+      - name: Assemble debug APK
+        run: cd apps/web/android && ./gradlew --no-daemon assembleDebug
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: jorkonvo-debug-apk
+          path: apps/web/android/app/build/outputs/apk/debug/*.apk
+          retention-days: 7
+
+  e2e:
+    runs-on: docker
+    # The end-to-end suite spins up a throwaway Synapse via docker compose,
+    # so the runner must expose a Docker socket (jorbox-runner mounts
+    # /var/run/docker.sock) or this job stays skipped. It is intentionally
+    # separate from build-and-test so a missing Docker-in-Docker runner
+    # never blocks the fast checks. Enable by setting the repo variable
+    # RUN_E2E=true.
+    needs: build-and-test
+    if: ${{ vars.RUN_E2E == 'true' }}
+    container:
+      # Plain Node image + the Docker CLI installed below. --network host so
+      # the suite can reach the compose stack published on 127.0.0.1:18448
+      # (the containers themselves run on the host daemon via the socket).
+      image: node:22-bookworm
+    env:
+      # The compose stack's published port is on the host loopback, not this
+      # job container's - up.sh joins the compose network and we reach Caddy
+      # by service name. (Caddy's cert is for "localhost"; the suite runs
+      # with ignoreHTTPSErrors / NODE_TLS_REJECT_UNAUTHORIZED=0.)
+      E2E_HOMESERVER: https://caddy
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install the Docker CLI + compose plugin
+        run: |
+          set -eux
+          apt-get update
+          apt-get install -y ca-certificates curl
+          install -m 0755 -d /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+          chmod a+r /etc/apt/keyrings/docker.asc
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian bookworm stable" > /etc/apt/sources.list.d/docker.list
+          apt-get update
+          apt-get install -y docker-ce-cli docker-compose-plugin
+          docker version
+          docker compose version
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browser + system deps
+        run: npx playwright install --with-deps chromium
+
+      - name: Build
+        run: npm run build
+
+      - name: Start test homeserver
+        run: ./e2e/scripts/up.sh
+
+      - name: Run Playwright E2E
+        run: npm run test:e2e
+
+      - name: Tear down test homeserver
+        if: always()
+        run: ./e2e/scripts/down.sh
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-report
+          path: e2e/playwright-report/
+          retention-days: 7

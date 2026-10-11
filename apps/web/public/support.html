@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>JorKonvo — Support / Támogatás</title>
+  <meta name="description" content="Help and contact for the JorKonvo Matrix chat app / Segítség és kapcsolat a JorKonvo Matrix csevegő apphoz.">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #ffffff;
+      --fg: #1f2328;
+      --muted: #59636e;
+      --border: #d1d9e0;
+      --accent: #5865f2;
+      --code-bg: #f3f4f6;
+      --callout-bg: #f6f8fa;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1e1f22;
+        --fg: #e6e7ea;
+        --muted: #a3a6ad;
+        --border: #3a3c42;
+        --accent: #8b95ff;
+        --code-bg: #2b2d31;
+        --callout-bg: #26282c;
+      }
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    main, header, footer { max-width: 46rem; margin: 0 auto; padding: 0 1rem; }
+    header { padding-top: 2rem; }
+    h1 { font-size: 1.75rem; line-height: 1.25; margin: 0 0 .5rem; }
+    h2 { font-size: 1.4rem; margin: 2.5rem 0 .75rem; padding-bottom: .3rem; border-bottom: 1px solid var(--border); }
+    h3 { font-size: 1.1rem; margin: 1.75rem 0 .5rem; }
+    p, ul, ol { margin: 0 0 1rem; }
+    li { margin: .25rem 0; }
+    a { color: var(--accent); }
+    code {
+      font: .9em/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: var(--code-bg);
+      padding: .1em .3em;
+      border-radius: 4px;
+      overflow-wrap: anywhere;
+    }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
+    .meta { color: var(--muted); font-style: italic; }
+    .lang-switch { display: flex; gap: .5rem; margin: 1rem 0 0; padding: 0; list-style: none; }
+    .lang-switch a {
+      display: inline-block;
+      padding: .3rem .8rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .callout { background: var(--callout-bg); border: 1px solid var(--border); border-radius: 8px; padding: .75rem 1rem; margin: 0 0 1rem; }
+    .callout > :last-child { margin-bottom: 0; }
+    footer { margin-top: 3rem; padding-bottom: 2rem; border-top: 1px solid var(--border); padding-top: 1rem; color: var(--muted); font-size: .9rem; }
+    footer nav { display: flex; flex-wrap: wrap; gap: 1rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>JorKonvo — Support / Támogatás</h1>
+    <p class="meta">Last updated / Utolsó frissítés: 2026-09-28</p>
+    <nav aria-label="Language / Nyelv">
+      <ul class="lang-switch">
+        <li><a href="#en" hreflang="en" lang="en">English</a></li>
+        <li><a href="#hu" hreflang="hu" lang="hu">Magyar</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <section id="en" lang="en" aria-labelledby="en-title">
+      <h2 id="en-title">English</h2>
+      <p><strong>JorKonvo</strong> is a chat app for the open Matrix protocol, available
+      for iPhone, iPad, Android, Windows, Linux and the web
+      (<a href="/">jorkonvo.szabotar.dev</a>).</p>
+      <h3>Contact</h3>
+      <p>Questions, bug reports and feedback:
+      <a href="mailto:szabotar@szabotar.dev?subject=JorKonvo%20support">szabotar@szabotar.dev</a>.
+      Please include your device, the app version (Settings) and what you were doing.</p>
+      <h3>Common questions</h3>
+      <ul>
+        <li><strong>Which server should I use?</strong> JorKonvo works with any Matrix
+          homeserver — enter its address on the sign-in screen. Your account lives on
+          that server, so account and moderation questions go to its operator.</li>
+        <li><strong>Can I read my encrypted messages on a new device?</strong> Yes — enter
+          your recovery key, or verify the new device from one that is already signed in.</li>
+        <li><strong>Notifications don't arrive when the app is closed.</strong> Background
+          push notifications on iPhone, iPad and Android are not available yet; messages
+          arrive while the app is open.</li>
+        <li><strong>How do I stop screen sharing on iPhone/iPad?</strong> Use the stop button
+          in the call, or tap the red recording indicator at the top of the screen.</li>
+      </ul>
+      <h3>Privacy and your account</h3>
+      <p>See the <a href="privacy.html">Privacy Policy</a> and how to
+      <a href="delete-account.html">delete your account</a>.</p>
+    </section>
+
+    <section id="hu" lang="hu" aria-labelledby="hu-title">
+      <h2 id="hu-title">Magyar</h2>
+      <p>A <strong>JorKonvo</strong> csevegőalkalmazás a nyílt Matrix protokollhoz,
+      iPhone-ra, iPadre, Androidra, Windowsra, Linuxra és böngészőbe
+      (<a href="/">jorkonvo.szabotar.dev</a>).</p>
+      <h3>Kapcsolat</h3>
+      <p>Kérdés, hibajelentés, visszajelzés:
+      <a href="mailto:szabotar@szabotar.dev?subject=JorKonvo%20t%C3%A1mogat%C3%A1s">szabotar@szabotar.dev</a>.
+      Írd meg az eszközöd típusát, az app verzióját (Beállítások) és hogy mit csináltál.</p>
+      <h3>Gyakori kérdések</h3>
+      <ul>
+        <li><strong>Melyik szervert használjam?</strong> A JorKonvo bármely Matrix szerverrel
+          működik — a bejelentkezésnél add meg a címét. A fiókod azon a szerveren van, ezért
+          a fiókkal és moderálással kapcsolatos kérdésekben annak üzemeltetője illetékes.</li>
+        <li><strong>Olvashatom a titkosított üzeneteimet új eszközön?</strong> Igen — add meg a
+          helyreállító kulcsodat, vagy ellenőrizd az új eszközt egy már bejelentkezettről.</li>
+        <li><strong>Nem jön értesítés, ha az app be van zárva.</strong> A háttérben érkező
+          push-értesítés iPhone-on, iPaden és Androidon még nem érhető el; az üzenetek
+          megnyitott appnál érkeznek.</li>
+        <li><strong>Hogyan állítom le a képernyőmegosztást iPhone-on/iPaden?</strong> A hívás
+          leállítás gombjával, vagy a képernyő tetején lévő piros felvétel-jelzőre koppintva.</li>
+      </ul>
+      <h3>Adatvédelem és fiók</h3>
+      <p>Lásd az <a href="privacy.html">adatvédelmi tájékoztatót</a> és a
+      <a href="delete-account.html">fióktörlés</a> leírását.</p>
+    </section>
+  </main>
+  <footer>
+    <nav aria-label="JorKonvo">
+      <a href="support.html">Support / Támogatás</a>
+      <a href="privacy.html">Privacy Policy / Adatvédelmi tájékoztató</a>
+      <a href="delete-account.html">Delete your account / Fiók törlése</a>
+      <a href="/">JorKonvo</a>
+    </nav>
+    <p>Contact / Kapcsolat: <a href="mailto:szabotar@szabotar.dev">szabotar@szabotar.dev</a></p>
+  </footer>
+</body>
+</html>

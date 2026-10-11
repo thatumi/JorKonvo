@@ -1,0 +1,78 @@
+# Sygnal config for push.szabotar.dev. Copy to sygnal.yaml next to
+# docker-compose.yml. Everything under /secrets lives ONLY on the server.
+log:
+  setup:
+    version: 1
+    formatters:
+      normal:
+        format: "%(asctime)s [%(process)d] %(levelname)-5s %(name)s %(message)s"
+    handlers:
+      stderr:
+        class: "logging.StreamHandler"
+        formatter: "normal"
+        stream: "ext://sys.stderr"
+    loggers:
+      sygnal.access:
+        propagate: false
+        handlers: ["stderr"]
+        level: "INFO"
+      sygnal:
+        propagate: false
+        handlers: ["stderr"]
+        level: "INFO"
+    root:
+      handlers: ["stderr"]
+      level: "INFO"
+    disable_existing_loggers: false
+  access:
+    # Behind Nginx Proxy Manager - log the real client (Synapse) address.
+    x_forwarded_for: true
+
+http:
+  # Inside the container; docker-compose only publishes it on 127.0.0.1.
+  bind_addresses: ["0.0.0.0"]
+  port: 5000
+
+metrics:
+  prometheus:
+    enabled: false
+  opentracing:
+    enabled: false
+  sentry:
+    enabled: false
+
+# app_id -> pushkin. The client picks the app_id per platform
+# (apps/web/src/lib/push/*.ts); they must match these keys exactly.
+apps:
+  # iOS - token-based APNs auth (.p8 key from the Apple Developer Portal,
+  # Keys -> "Apple Push Notifications service"). The app's aps-environment
+  # entitlement is `production` (App Store / TestFlight builds only).
+  dev.szabotar.jorkonvo.ios:
+    type: apns
+    keyfile: /secrets/AuthKey_XXXXXXXXXX.p8
+    key_id: XXXXXXXXXX
+    team_id: 9GW94NJAU7
+    topic: dev.szabotar.jorkonvo
+    platform: production
+    push_type: alert
+    # Capacitor hands the device token over as hex already.
+    convert_device_token_to_hex: false
+
+  # Android - FCM HTTP v1 (service account JSON from Firebase ->
+  # Project settings -> Service accounts). Sygnal sends DATA-only messages;
+  # the app's own FirebaseMessagingService builds the notification.
+  dev.szabotar.jorkonvo.android:
+    type: gcm
+    api_version: v1
+    project_id: jorkonvo
+    service_account_file: /secrets/firebase-service-account.json
+
+  # Browser - Web Push with VAPID. Generate the key once with
+  #   docker run --rm -v "$PWD/secrets:/secrets" -w /secrets --entrypoint vapid \
+  #     matrixdotorg/sygnal:v0.15.1 --gen --applicationServerKey
+  # and give the printed applicationServerKey to the web build as
+  # VITE_VAPID_PUBLIC_KEY.
+  dev.szabotar.jorkonvo.web:
+    type: webpush
+    vapid_private_key: /secrets/vapid_private_key.pem
+    vapid_contact_email: admin@szabotar.dev

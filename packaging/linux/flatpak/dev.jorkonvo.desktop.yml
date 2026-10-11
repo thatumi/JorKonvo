@@ -1,0 +1,67 @@
+# Flatpak manifest for the JorKonvo desktop app (Tauri + CEF/Chromium).
+#
+# It repackages the release .deb (Chromium runtime libs come from the GNOME
+# runtime, which already ships GTK3/NSS/CUPS/ATK - so no duplicate libs, unlike
+# the AppImage). Build locally: packaging/linux/flatpak/build-local.sh
+#
+# Not Flathub-ready: Flathub wants a from-source build (no prebuilt binaries),
+# which the git `feat/cef` Tauri dependency tree does not allow yet. This is for
+# a self-hosted Flatpak repo / a .flatpak bundle.
+app-id: dev.jorkonvo.desktop
+runtime: org.gnome.Platform
+runtime-version: '48'
+sdk: org.gnome.Sdk
+command: jorkonvo
+
+finish-args:
+  # Matrix homeserver, media, LiveKit/TURN.
+  - --share=network
+  - --share=ipc
+  # CEF runs on X11 (XWayland on a Wayland session); no native Wayland flags set.
+  - --socket=x11
+  # GPU rendering / WebGL / video decode.
+  - --device=dri
+  # Calls: speaker + microphone via PulseAudio (pipewire-pulse on modern distros).
+  - --socket=pulseaudio
+  # Camera: Flatpak has no narrower option than --device=all for V4L2 devices
+  # (the PipeWire camera portal is not wired into CEF). Drop this line and
+  # video calls lose the webcam; audio/screen-share are unaffected.
+  - --device=all
+  # Desktop notifications.
+  - --talk-name=org.freedesktop.Notifications
+  # Deliberately NOT granted: --filesystem=home (uploads go through the file
+  # chooser portal), and no Discord-IPC socket path: the app hosts a
+  # Discord-RPC-compatible server, but a sandboxed $XDG_RUNTIME_DIR is not the
+  # host's, so games on the host cannot see it. Rich Presence is unsupported in
+  # the Flatpak build.
+
+modules:
+  - name: jorkonvo
+    buildsystem: simple
+    sources:
+      # build-local.sh swaps `url` for a local `path`; keep sha256 in sync per release.
+      - type: file
+        url: https://git.szabotar.dev/thatumi/JorKonvo/releases/download/linux-v0.1.3/JorKonvo_0.1.3_amd64.deb
+        sha256: f9383dcc66ff5d6173955cc7416a5513219459182ba6fc7f8474265cb3b666a0
+        dest-filename: jorkonvo.deb
+      - type: file
+        path: dev.jorkonvo.desktop.desktop
+      - type: file
+        path: dev.jorkonvo.desktop.metainfo.xml
+      - type: file
+        path: jorkonvo.sh
+    build-commands:
+      - ar x jorkonvo.deb && mkdir root && tar -C root -xf data.tar.*
+      - install -d /app/lib/jorkonvo
+      # Everything under usr/share/JorKonvo (CEF runtime + the binary); the deb's
+      # setuid chrome-sandbox is useless (and un-installable) inside /app.
+      - cp -a root/usr/share/JorKonvo/. /app/lib/jorkonvo/
+      - rm -f /app/lib/jorkonvo/chrome-sandbox
+      - install -Dm755 jorkonvo.sh /app/bin/jorkonvo
+      - install -Dm644 dev.jorkonvo.desktop.desktop /app/share/applications/dev.jorkonvo.desktop.desktop
+      - install -Dm644 dev.jorkonvo.desktop.metainfo.xml /app/share/metainfo/dev.jorkonvo.desktop.metainfo.xml
+      - |
+        for s in 32x32 128x128 512x512; do
+          install -Dm644 root/usr/share/icons/hicolor/$s/apps/jorkonvo-desktop.png \
+            /app/share/icons/hicolor/$s/apps/dev.jorkonvo.desktop.png
+        done

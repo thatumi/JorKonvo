@@ -1,0 +1,153 @@
+# Caddy handles TLS for every domain automatically (Let's Encrypt) and serves
+# the Matrix .well-known files, which is what makes clients (JorKonvo,
+# Element, …) discover the homeserver, LiveKit and — if enabled — the OIDC
+# issuer.
+
+{
+	email {$ACME_EMAIL}
+}
+
+# Baseline hardening headers, applied on every domain below via `import
+# security_headers` - none of these change any actual app behaviour, they
+# only remove/restrict things nothing here relies on. HSTS is safe even for
+# the homeserver/admin/livekit domains since Caddy already forces HTTPS
+# (automatic HTTPS + ACME) everywhere; a plaintext HTTP request never
+# reaches an app response to downgrade in the first place.
+(security_headers) {
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+}
+
+# ── Client discovery + brand domain ──────────────────────────────────────
+{$APEX_DOMAIN} {
+	import security_headers
+
+	# Matrix client discovery. The rtc_foci entry is what tells JorKonvo /
+	# Element Call where the LiveKit SFU is.
+	handle /.well-known/matrix/client {
+		header Content-Type application/json
+		header Access-Control-Allow-Origin *
+		respond `{
+			"m.homeserver": { "base_url": "https://{$MATRIX_DOMAIN}" },
+			"org.matrix.msc4143.rtc_foci": [
+				{ "type": "livekit", "livekit_service_url": "https://{$LK_JWT_DOMAIN}" }
+			]
+		}`
+	}
+
+	handle /.well-known/matrix/server {
+		header Content-Type application/json
+		respond `{ "m.server": "{$MATRIX_DOMAIN}:443" }`
+	}
+
+	# If the `webapp` profile is up, serve the JorKonvo web build here.
+	#
+	# The CSP below is scoped to what this specific SPA actually needs, not a
+	# generic template: `connect-src`/`img-src`/`media-src` allow any `https:`
+	# origin because a Matrix client talks to whichever homeserver (and that
+	# homeserver's media repo) the person signing in chooses - it's not a
+	# fixed, allowlistable set of hosts the way a normal web app's API is.
+	# `style-src` needs 'unsafe-inline' because the app sets React inline
+	# `style={{...}}` attributes throughout (role colours, avatar/banner
+	# backgrounds, live drag positions) - rewriting all of those into
+	# stylesheet classes just to drop one directive isn't a safe blind change,
+	# and inline STYLE injection is a materially smaller risk than inline
+	# SCRIPT injection (which stays locked down below with no 'unsafe-inline').
+	# `frame-src https:` is for the intentional third-party embeds (YouTube/
+	# Twitch/Spotify previews, Matrix widgets, Watch Together) - those are
+	# already sandboxed browser contexts, not the top-level page.
+	#
+	# The lone `'sha256-...'` in `script-src` is the pre-paint theme-init
+	# inline script in apps/web/index.html (kept inline so it runs before
+	# first paint). Vite's own <meta> CSP computes the same hash; this header
+	# and that meta are both enforced, so both must carry it. If that script
+	# ever changes, update the hash here, in apps/web/vite.config.ts's
+	# expectations, and in apps/desktop/src-tauri/tauri.conf.json.
+	handle {
+		header {
+			Content-Security-Policy "default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'sha256-BqpGXM4svq2z3tEACP96WoQa/Rn545bnI3Y3OYkbgio='; style-src 'self' 'unsafe-inline'; img-src 'self' https: blob: data:; media-src 'self' https: blob: data:; font-src 'self' data:; connect-src 'self' https: wss:; worker-src 'self' blob:; frame-src https:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+			X-Frame-Options "DENY"
+		}
+		reverse_proxy webapp:8081
+	}
+}
+
+# ── Homeserver ───────────────────────────────────────────────────────────
+{$MATRIX_DOMAIN} {
+	import security_headers
+
+	handle /.well-known/matrix/server {
+		header Content-Type application/json
+		respond `{ "m.server": "{$MATRIX_DOMAIN}:443" }`
+	}
+	# Federation + client API + authenticated media.
+	#
+	# These MUST be `handle` blocks, not bare top-level `reverse_proxy
+	# /path/*` directives: Caddy reorders top-level directives by its own
+	# global precedence list (independent of the order they're written in
+	# the file), and `handle` sits ahead of `reverse_proxy` in that list. A
+	# bare `reverse_proxy /_matrix/*` next to a bare catch-all `handle { }`
+	# below would mean the catch-all always wins and Synapse is never
+	# actually reachable through Caddy - found by an actual local run
+	# (curling /_matrix/client/versions returned the "JorKonvo homeserver"
+	# text instead of the real API response, on every request).
+	handle /_matrix/* {
+		reverse_proxy synapse:8008
+	}
+	handle /_synapse/client/* {
+		reverse_proxy synapse:8008
+	}
+	# Synapse's own unauthenticated health check (`{"level":"info",...
+	# "Attaching HealthResource ... to path b'/health'"}` in its startup log)
+	# - useful for external uptime monitoring (UptimeRobot, Healthchecks.io,
+	# Uptime Kuma, ...), see README.md's "Monitoring" section. Needs its own
+	# `handle` for the same reason as the two blocks above: without one, the
+	# catch-all below swallows it and returns 200 EVEN IF SYNAPSE ITSELF IS
+	# DOWN - a monitor watching that response would never notice an outage
+	# (found by actually curling /health through Caddy before this fix and
+	# getting the static "JorKonvo homeserver" text back, not Synapse's).
+	handle /health {
+		reverse_proxy synapse:8008
+	}
+	handle {
+		respond "JorKonvo homeserver" 200
+	}
+}
+
+# ── LiveKit SFU ──────────────────────────────────────────────────────────
+{$LIVEKIT_DOMAIN} {
+	import security_headers
+	# NOT 127.0.0.1: `livekit` runs with `network_mode: host`, but Caddy
+	# itself doesn't - 127.0.0.1 here is Caddy's own loopback, which never
+	# has anything listening on 7880. host.docker.internal (see the
+	# extra_hosts entry on the caddy service) is what actually reaches the
+	# host. Found by an actual local run: this reverse_proxy target
+	# connection-refused on every single request, regardless of any host
+	# firewall configuration.
+	reverse_proxy host.docker.internal:7880
+}
+
+# ── LiveKit token service ────────────────────────────────────────────────
+{$LK_JWT_DOMAIN} {
+	import security_headers
+	reverse_proxy lk-jwt:8080
+}
+
+# ── Matrix Authentication Service (only with --profile mas) ───────────────
+{$MAS_DOMAIN} {
+	import security_headers
+	reverse_proxy mas:8080
+}
+
+# ── synapse-admin (only with --profile admin) ────────────────────────────
+{$ADMIN_DOMAIN} {
+	import security_headers
+	# Port 8080, not 80: ghcr.io/etkecc/synapse-admin actually serves on
+	# 8080 internally (a static-web-server process) - 80 just connection-
+	# refuses. Found by an actual local run with --profile admin.
+	reverse_proxy synapse-admin:8080
+}

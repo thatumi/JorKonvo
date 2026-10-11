@@ -1,0 +1,15 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["9GW94NJAU7.dev.szabotar.jorkonvo"],
+        "components": [
+          {
+            "/": "/join*",
+            "comment": "JorKonvo invite links - see packages/matrix-core/src/inviteLinks.ts"
+          }
+        ]
+      }
+    ]
+  }
+}

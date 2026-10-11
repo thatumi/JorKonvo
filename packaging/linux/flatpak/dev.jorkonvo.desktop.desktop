@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=JorKonvo
+Comment=Discord-style Matrix client
+Exec=jorkonvo %U
+Icon=dev.jorkonvo.desktop
+Terminal=false
+Categories=Network;InstantMessaging;Chat;
+StartupWMClass=jorkonvo-desktop

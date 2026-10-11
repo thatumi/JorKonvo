@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>JorKonvo — Delete your account / Fiók törlése</title>
+  <meta name="description" content="How to delete your JorKonvo account and what happens to your data / Hogyan törölheted a JorKonvo fiókodat, és mi történik az adataiddal.">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #ffffff;
+      --fg: #1f2328;
+      --muted: #59636e;
+      --border: #d1d9e0;
+      --accent: #5865f2;
+      --code-bg: #f3f4f6;
+      --callout-bg: #f6f8fa;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1e1f22;
+        --fg: #e6e7ea;
+        --muted: #a3a6ad;
+        --border: #3a3c42;
+        --accent: #8b95ff;
+        --code-bg: #2b2d31;
+        --callout-bg: #26282c;
+      }
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    main, header, footer { max-width: 46rem; margin: 0 auto; padding: 0 1rem; }
+    header { padding-top: 2rem; }
+    h1 { font-size: 1.75rem; line-height: 1.25; margin: 0 0 .5rem; }
+    h2 { font-size: 1.4rem; margin: 2.5rem 0 .75rem; padding-bottom: .3rem; border-bottom: 1px solid var(--border); }
+    h3 { font-size: 1.1rem; margin: 1.75rem 0 .5rem; }
+    p, ul, ol { margin: 0 0 1rem; }
+    li { margin: .25rem 0; }
+    a { color: var(--accent); }
+    code {
+      font: .9em/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: var(--code-bg);
+      padding: .1em .3em;
+      border-radius: 4px;
+      overflow-wrap: anywhere;
+    }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
+    .meta { color: var(--muted); font-style: italic; }
+    .lang-switch { display: flex; gap: .5rem; margin: 1rem 0 0; padding: 0; list-style: none; }
+    .lang-switch a {
+      display: inline-block;
+      padding: .3rem .8rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .callout { background: var(--callout-bg); border: 1px solid var(--border); border-radius: 8px; padding: .75rem 1rem; margin: 0 0 1rem; }
+    .callout > :last-child { margin-bottom: 0; }
+    footer { margin-top: 3rem; padding-bottom: 2rem; border-top: 1px solid var(--border); padding-top: 1rem; color: var(--muted); font-size: .9rem; }
+    footer nav { display: flex; flex-wrap: wrap; gap: 1rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>JorKonvo — Delete your account / Fiók törlése</h1>
+    <p class="meta">Last updated / Utolsó frissítés: 2026-09-24</p>
+    <nav aria-label="Language / Nyelv">
+      <ul class="lang-switch">
+        <li><a href="#en" hreflang="en" lang="en">English</a></li>
+        <li><a href="#hu" hreflang="hu" lang="hu">Magyar</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <section id="en" lang="en" aria-labelledby="en-title">
+      <h2 id="en-title">English</h2>
+      <p>This page explains how to delete an account you use with the
+      <strong>JorKonvo</strong> app (Android package <code>dev.szabotar.jorkonvo</code>,
+      also available on the web at <code>jorkonvo.szabotar.dev</code>), and what
+      happens to your data when you do. Developer contact:
+      <a href="mailto:szabotar@szabotar.dev">szabotar@szabotar.dev</a>.</p>
+
+      <div class="callout">
+        <p><strong>Where your account lives.</strong> JorKonvo is a client for the
+        Matrix chat protocol. Your account is hosted by the <strong>Matrix
+        homeserver</strong> you signed in to — there is no
+        JorKonvo-run service: it can be any Matrix homeserver, run by anyone.
+        (The sign-in screen is prefilled with <code>matrix.szabotar.dev</code>, a
+        private test server the developer runs for friends; it is not a public
+        service.) Deleting the account means deactivating it
+        on that homeserver. The in-app steps below work on any homeserver that
+        supports account deactivation; the email option further down is only for
+        accounts on the developer's private test server. For any other
+        homeserver, contact that server's operator.</p>
+      </div>
+
+      <h3 id="en-steps">Delete your account in the app</h3>
+      <ol>
+        <li>Open JorKonvo and sign in to the account you want to delete (if you
+          have several accounts in the app, switch to that one first).</li>
+        <li>Open <strong>User settings</strong>: tap your own name/avatar in the user
+          panel at the bottom of the channel list.</li>
+        <li>Choose the <strong>Account</strong> category.</li>
+        <li>Scroll to the <strong>Delete account</strong> section at the bottom.
+          (Optional: before deleting, you can use <strong>Download my data</strong>
+          in the same category to save a JSON copy of your profile, devices, room
+          memberships and account settings.)</li>
+        <li>Optionally tick <strong>Also erase my sent messages where
+          possible</strong> (see “What happens to your messages” below).</li>
+        <li>Tap <strong>Delete my account</strong> and confirm the warning dialog
+          with <strong>Delete my account</strong>.</li>
+        <li>If your homeserver asks you to confirm your identity, enter your
+          password in the <strong>Confirm password</strong> field and tap
+          <strong>Confirm</strong>.</li>
+        <li>The account is deactivated immediately and the app signs you out of
+          it.</li>
+      </ol>
+      <p>This cannot be undone: a deactivated account can never sign in again.
+      If the button shows an error (for example because your homeserver does
+      not support deactivation, or only supports a sign-in method other than a
+      password for this step), contact your homeserver's operator
+      (or use the email option below if your account is on
+      <code>matrix.szabotar.dev</code>).</p>
+
+      <h3 id="en-data">What is deleted</h3>
+      <p>The app asks your homeserver to deactivate the account using the
+      standard Matrix account-deactivation request
+      (<code>POST /_matrix/client/v3/account/deactivate</code>). After that:</p>
+      <ul>
+        <li>The account is permanently disabled — nobody can sign in to it
+          again. On <code>matrix.szabotar.dev</code> (Synapse) the user ID also stays
+          reserved and cannot be registered again.</li>
+        <li>All sessions/devices of the account are signed out, and the
+          homeserver removes the account's linked email address/phone number
+          and removes the account from the rooms it was in (the exact clean-up
+          depends on the homeserver software; the above is what Synapse, which
+          runs <code>matrix.szabotar.dev</code>, does).</li>
+        <li>On your device, the app signs out and removes the account's saved
+          session from its account list. Other data the app keeps on your
+          device — the local encryption-key store and your UI preferences — is
+          not wiped by this step. To remove it too, uninstall the app or clear
+          its storage (Android: Settings → Apps → JorKonvo → Storage → Clear
+          storage; web: clear this site's data in your browser).</li>
+      </ul>
+
+      <h3 id="en-messages">What happens to your messages (what may be kept)</h3>
+      <ul>
+        <li><strong>Without the erase option</strong>, messages you already sent
+          stay in the rooms' history and remain visible to the other members of
+          those rooms, as with any deactivated Matrix account.</li>
+        <li><strong>With “Also erase my sent messages where possible”</strong>, the
+          homeserver is asked to erase your content as far as it can. Under the
+          Matrix specification this is best-effort: people (and servers) who
+          join a room after the erasure see redacted copies of your messages,
+          but people who could already see them may still see the original
+          copies, and the erasure is not shared over federation.</li>
+        <li>Rooms that include users on other Matrix servers (federation) have
+          copies of the messages on those servers too; JorKonvo's developer
+          cannot delete data held by other servers' operators.</li>
+        <li>Messages in end-to-end encrypted rooms were never readable by the
+          homeserver; recipients who can decrypt them keep their copies.</li>
+        <li>Files and media you uploaded may remain stored on the homeserver
+          unless its operator removes them. Ask the homeserver's operator (for
+          <code>matrix.szabotar.dev</code>, by email, see below).</li>
+        <li>Backups made by the homeserver operator before your deletion may
+          still contain your account data until they are overwritten according
+          to the operator's backup schedule.</li>
+      </ul>
+
+      <h3 id="en-email">No longer have the app? Request deletion by email</h3>
+      <p>This applies only to accounts on <code>matrix.szabotar.dev</code>, the
+      developer's private test server. If your account is there and you no
+      longer have the app, you can request deletion by email:</p>
+      <ul>
+        <li>Email <a href="mailto:szabotar@szabotar.dev?subject=JorKonvo%20account%20deletion%20request">szabotar@szabotar.dev</a>
+          with the subject <strong>“JorKonvo account deletion request”</strong>.</li>
+        <li>Include your full Matrix ID (e.g. <code>@yourname:matrix.szabotar.dev</code>),
+          the homeserver address, and whether you also want your sent messages
+          and uploaded files erased where possible.</li>
+        <li>If an email address is linked to the account, send the request from
+          that address. Otherwise you may be asked to prove that the account is
+          yours (for example by sending a message from it). <strong>Never send
+          your password.</strong></li>
+        <li>You will get a reply and a confirmation once the deletion is done;
+          this is handled by one person, so allow a few weeks.</li>
+      </ul>
+      <p>For accounts on any other homeserver, JorKonvo's developer has no access
+      to them — please contact that homeserver's operator.</p>
+
+      <h3 id="en-partial">Deleting some data without deleting the account</h3>
+      <p>You can also delete individual messages you sent, leave rooms, remove
+      your linked email/phone (<strong>User settings → Account → Email /
+      phone</strong>) and sign out other devices (<strong>Signed-in devices /
+      sessions</strong>) without deactivating the account. See the
+      <a href="privacy.html#en">privacy policy</a> for details on what data is
+      processed.</p>
+    </section>
+
+    <hr>
+
+    <section id="hu" lang="hu" aria-labelledby="hu-title">
+      <h2 id="hu-title">Magyar</h2>
+      <p>Ez az oldal leírja, hogyan törölhetsz egy fiókot, amit a
+      <strong>JorKonvo</strong> alkalmazással használsz (Android csomagnév:
+      <code>dev.szabotar.jorkonvo</code>, weben: <code>jorkonvo.szabotar.dev</code>),
+      és mi történik ilyenkor az adataiddal. A fejlesztő elérhetősége:
+      <a href="mailto:szabotar@szabotar.dev">szabotar@szabotar.dev</a>.</p>
+
+      <div class="callout">
+        <p><strong>Hol van a fiókod?</strong> A JorKonvo a Matrix csevegési
+        protokoll kliense. A fiókodat az a <strong>Matrix szerver</strong> tárolja,
+        amelyre bejelentkeztél — a JorKonvónak nincs saját szolgáltatása, ez
+        bármely Matrix szerver lehet, bárki üzemeltetésében. (A bejelentkező
+        képernyőn előre ki van töltve a <code>matrix.szabotar.dev</code>, ami a
+        fejlesztő privát tesztszervere barátoknak, nem nyilvános szolgáltatás.) A fiók törlése azt jelenti, hogy a fiókot ezen a szerveren
+        deaktiválod. Az alábbi, appon belüli lépések minden olyan szerveren
+        működnek, amely támogatja a fiók deaktiválását; a lentebb leírt email-es
+        lehetőség csak a fejlesztő privát tesztszerverén lévő fiókokra
+        vonatkozik. Más szerver esetén annak üzemeltetőjét keresd.</p>
+      </div>
+
+      <h3 id="hu-steps">Fiók törlése az appban</h3>
+      <ol>
+        <li>Nyisd meg a JorKonvót, és jelentkezz be a törölni kívánt fiókba (ha
+          több fiók is van az appban, előbb válts arra).</li>
+        <li>Nyisd meg a <strong>Felhasználói beállítások</strong> ablakot: koppints a
+          saját nevedre/profilképedre a csatornalista alján lévő felhasználói
+          panelen.</li>
+        <li>Válaszd a <strong>Fiók</strong> kategóriát.</li>
+        <li>Görgess le a <strong>Fiók törlése</strong> részhez. (Törlés előtt
+          ugyanebben a kategóriában az <strong>Adataim letöltése</strong> gombbal
+          elmentheted a profilod, eszközeid, szoba-tagságaid és fiók-beállításaid
+          JSON másolatát.)</li>
+        <li>Ha szeretnéd, pipáld be a <strong>A küldött üzeneteim törlése is, ahol
+          lehetséges</strong> opciót (l. lentebb: „Mi történik az
+          üzeneteiddel”).</li>
+        <li>Koppints a <strong>Fiókom törlése</strong> gombra, és a figyelmeztető
+          ablakban erősítsd meg a <strong>Fiókom törlése</strong> gombbal.</li>
+        <li>Ha a szervered kéri a személyazonosságod megerősítését, írd be a
+          jelszavadat a <strong>Jelszó megerősítése</strong> mezőbe, és koppints a
+          <strong>Megerősítés</strong> gombra.</li>
+        <li>A fiók azonnal deaktiválódik, és az app kijelentkeztet belőle.</li>
+      </ol>
+      <p>Ez nem vonható vissza: egy deaktivált fiókba soha többé nem lehet
+      bejelentkezni. Ha a gomb hibát jelez (például mert a szervered nem
+      támogatja a deaktiválást, vagy ehhez a lépéshez jelszó helyett csak más
+      bejelentkezési módot fogad el), fordulj a szervered üzemeltetőjéhez (vagy ha a fiókod a <code>matrix.szabotar.dev</code>-en van, használd az alábbi email-es lehetőséget),
+      vagy keresd a szervered üzemeltetőjét.</p>
+
+      <h3 id="hu-data">Mi törlődik</h3>
+      <p>Az app a szabványos Matrix fiók-deaktiválási kéréssel
+      (<code>POST /_matrix/client/v3/account/deactivate</code>) kéri a szerveredet a
+      fiók deaktiválására. Ezután:</p>
+      <ul>
+        <li>A fiók véglegesen le van tiltva — senki nem tud többé bejelentkezni
+          vele. A <code>matrix.szabotar.dev</code> szerveren (Synapse) a
+          felhasználói azonosító foglalt marad, újra nem regisztrálható.</li>
+        <li>A fiók összes munkamenete/eszköze kijelentkeztetésre kerül, a szerver
+          eltávolítja a fiókhoz kapcsolt email-címet/telefonszámot, és kilépteti
+          a fiókot azokból a szobákból, amelyeknek tagja volt (a pontos
+          takarítás a szerverszoftvertől függ; a fenti a Synapse viselkedése,
+          ami a <code>matrix.szabotar.dev</code>-et futtatja).</li>
+        <li>Az eszközödön az app kijelentkezik, és törli a fiók mentett
+          munkamenetét a fióklistájából. Az app által az eszközön tárolt egyéb
+          adatokat — a helyi titkosításikulcs-tárolót és a felület-beállításokat —
+          ez a lépés nem törli. Ha ezeket is el szeretnéd távolítani, töröld az
+          appot, vagy ürítsd ki a tárhelyét (Android: Beállítások → Alkalmazások →
+          JorKonvo → Tárhely → Tárhely törlése; web: töröld ennek az oldalnak az
+          adatait a böngésződben).</li>
+      </ul>
+
+      <h3 id="hu-messages">Mi történik az üzeneteiddel (mi maradhat meg)</h3>
+      <ul>
+        <li><strong>A törlés-opció nélkül</strong> a már elküldött üzeneteid a
+          szobák előzményeiben maradnak, és a szobák többi tagja továbbra is
+          látja őket, ahogy bármely deaktivált Matrix fióknál.</li>
+        <li><strong>„A küldött üzeneteim törlése is, ahol lehetséges”</strong>
+          opcióval a szerver a lehető legnagyobb mértékben törli a tartalmaidat.
+          A Matrix specifikáció szerint ez „legjobb szándékú” (best-effort)
+          törlés: akik (és azok a szerverek, amelyek) a törlés után csatlakoznak
+          egy szobához, a te üzeneteidnek már csak kitakart (redacted) változatát
+          látják, de akik korábban is láthatták őket, még láthatják az eredeti
+          példányt, és a törlési kérés nem terjed át a föderációban.</li>
+        <li>A más Matrix szervereken lévő felhasználókat is tartalmazó
+          (föderált) szobák üzeneteinek azokon a szervereken is van másolata; a
+          JorKonvo fejlesztője nem tudja törölni a más szerverek üzemeltetőinél
+          tárolt adatokat.</li>
+        <li>A végpontok között titkosított szobák üzeneteit a szerver sosem
+          tudta elolvasni; azok a címzettek, akik vissza tudják fejteni őket,
+          megtartják a saját példányukat.</li>
+        <li>A feltöltött fájlok és médiák a szerveren maradhatnak, hacsak az
+          üzemeltető el nem távolítja őket. A <code>matrix.szabotar.dev</code>
+          esetén ezt emailben kérheted (l. lentebb); egyébként a szerver üzemeltetőjét kérd.</li>
+        <li>A szerver üzemeltetője által a törlés előtt készített mentések még
+          tartalmazhatják a fiókod adatait, amíg az üzemeltető mentési rendje
+          szerint felül nem íródnak.</li>
+      </ul>
+
+      <h3 id="hu-email">Már nincs meg az app? Törlés kérése emailben</h3>
+      <p>Ez csak a <code>matrix.szabotar.dev</code> szerveren lévő fiókokra vonatkozik,
+      ami a fejlesztő privát tesztszervere. Ha a fiókod ott van, és már nincs meg
+      az app, emailben kérheted a törlést:</p>
+      <ul>
+        <li>Írj a <a href="mailto:szabotar@szabotar.dev?subject=JorKonvo%20fi%C3%B3kt%C3%B6rl%C3%A9si%20k%C3%A9relem">szabotar@szabotar.dev</a>
+          címre <strong>„JorKonvo fióktörlési kérelem”</strong> tárggyal.</li>
+        <li>Add meg a teljes Matrix azonosítódat (pl.
+          <code>@felhasznalonev:matrix.szabotar.dev</code>), a szerver címét, és hogy
+          a küldött üzeneteid és feltöltött fájljaid törlését is kéred-e, ahol
+          lehetséges.</li>
+        <li>Ha a fiókhoz email-cím van kapcsolva, arról a címről küldd a kérést.
+          Ellenkező esetben megkérhetünk, hogy igazold, hogy a fiók a tiéd
+          (például egy üzenettel magából a fiókból). <strong>A jelszavadat soha
+          ne küldd el.</strong></li>
+        <li>Választ és a törlés végrehajtásáról visszaigazolást kapsz; ezt egy
+          személy intézi, ezért számíts pár hétre.</li>
+      </ul>
+      <p>Más szervereken lévő fiókokhoz a JorKonvo fejlesztőjének nincs
+      hozzáférése — ilyenkor az adott szerver üzemeltetőjét keresd.</p>
+
+      <h3 id="hu-partial">Egyes adatok törlése a fiók törlése nélkül</h3>
+      <p>A fiók deaktiválása nélkül is törölheted egyes elküldött üzeneteidet,
+      kiléphetsz szobákból, eltávolíthatod a kapcsolt email-címet/telefonszámot
+      (<strong>Felhasználói beállítások → Fiók → Email / telefon</strong>), és
+      kijelentkeztethetsz más eszközöket (<strong>Bejelentkezett eszközök /
+      munkamenetek</strong>). Arról, hogy milyen adatokat kezel az app, az
+      <a href="privacy.html#hu">adatvédelmi tájékoztató</a> ír részletesen.</p>
+    </section>
+  </main>
+  <footer>
+    <nav aria-label="JorKonvo">
+      <a href="support.html">Support / Támogatás</a>
+      <a href="privacy.html">Privacy Policy / Adatvédelmi tájékoztató</a>
+      <a href="delete-account.html">Delete your account / Fiók törlése</a>
+      <a href="/">JorKonvo</a>
+    </nav>
+    <p>Contact / Kapcsolat: <a href="mailto:szabotar@szabotar.dev">szabotar@szabotar.dev</a></p>
+  </footer>
+</body>
+</html>

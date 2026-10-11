@@ -1,0 +1,39 @@
+# coturn - TURN server for WebRTC (1:1 Matrix calls + LiveKit fallback).
+# provision.sh renders this to turnserver.conf with the real values.
+#
+# listening-port is 3479, NOT the TURN-standard 3478: livekit.yaml's
+# embedded TURN (for group calls) already claims UDP 3478 on this same
+# host, and both `livekit` and `coturn` run with `network_mode: host` -
+# with both at 3478 coturn can never bind, retrying forever with "Address
+# already in use" (found by an actual local run of the two together, not
+# just reading the configs). This is fine: unlike the well-known port a
+# STUN/TURN client tries by default, Matrix clients only ever use whatever
+# `turn_uris` in homeserver.yaml actually says, never a hardcoded guess -
+# keep the two in sync if you ever change this again.
+listening-port=3479
+tls-listening-port=5350
+min-port=49152
+max-port=49999
+
+listening-ip=0.0.0.0
+external-ip=${PUBLIC_IP}
+realm=${MATRIX_DOMAIN}
+server-name=${MATRIX_DOMAIN}
+
+# Synapse hands out short-lived credentials derived from this shared secret;
+# it must match `turn_shared_secret` in homeserver.yaml.
+use-auth-secret
+static-auth-secret=${TURN_SHARED_SECRET}
+
+# Don't let TURN be used to reach the local network / metadata endpoints.
+no-loopback-peers
+no-multicast-peers
+denied-peer-ip=10.0.0.0-10.255.255.255
+denied-peer-ip=172.16.0.0-172.31.255.255
+denied-peer-ip=192.168.0.0-192.168.255.255
+denied-peer-ip=169.254.0.0-169.254.255.255
+denied-peer-ip=100.64.0.0-100.127.255.255
+
+no-cli
+no-tlsv1
+no-tlsv1_1

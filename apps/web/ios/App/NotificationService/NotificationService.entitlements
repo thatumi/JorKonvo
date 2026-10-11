@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Same App Group as App/App.entitlements: the app writes the push
+	     store there (JorPushCore.PushStore), this extension reads it. The
+	     group id doubles as the keychain access group of the store's key.
+	     Assigned to dev.szabotar.jorkonvo.NotificationService in the Apple
+	     Developer Portal (profile "jorkonvo-notification-service"). -->
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.dev.szabotar.jorkonvo</string>
+	</array>
+
+	<!-- Communication Notifications: the INSendMessageIntent the extension
+	     donates shows the sender's picture instead of the app icon. -->
+	<key>com.apple.developer.usernotifications.communication</key>
+	<true/>
+</dict>
+</plist>

@@ -1,0 +1,18 @@
+# Copy per customer, then: terraform apply -var-file=thatumi.tfvars
+hcloud_token      = "..."
+cloudflare_token  = "..."
+cloudflare_zone_id = "..."
+
+tenant       = "acme"
+server_type  = "cx22"          # cx22 2c/4g ~€4/mo · cx32 4c/8g ~€7/mo · cx42 8c/16g
+location     = "nbg1"
+apex_domain  = "chat.acme.example"
+base_domain  = "acme.example"  # must be a zone in the Cloudflare account
+acme_email   = "ops@you.example"
+
+admin_username = "admin"
+admin_password = "change-me"
+
+ssh_key_ids       = []          # optional: Hetzner SSH key ids for console access
+open_registration = "false"
+deploy_tarball_url = ""         # set once the repo has a public tarball of deploy/

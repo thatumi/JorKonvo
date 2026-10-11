@@ -1,0 +1,165 @@
+# Codemagic CI/CD — JorKonvo iOS
+#
+# Miért Codemagic: az iOS archive/IPA-hoz Mac + Xcode kell, és ezen a
+# fejlesztői gépen (Linux) nincs. A natív iOS projekt (`apps/web/ios/`) itt,
+# Linuxon van scaffoldolva és git-be véve (`npx cap add ios`), a tényleges
+# fordítás pedig itt, egy Codemagic Mac instance-en történik.
+#
+# A web és Android build/teszt/lint továbbra is a Forgejo Actions-ben fut
+# (.forgejo/workflows/ci.yml) — ez a fájl KIZÁRÓLAG az iOS csomagolásért felel.
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# MIT KELL A TULAJDONOSNAK BEÁLLÍTANIA a Codemagic UI-ban (egyszeri):
+#
+#   1. App Store Connect integráció (Teams → Integrations → App Store Connect):
+#      egy App Store Connect API kulcs (Issuer ID + Key ID + .p8). Ez adja a
+#      kód-aláíráshoz a certet+profilt (automatic signing) ÉS a TestFlight
+#      feltöltést. Az integráció neve kerüljön alább az
+#      `app_store_connect.auth: integration` + `ios_signing` alá — itt
+#      "AppStoreConnect" néven hivatkozunk rá, írd át a sajátodra.
+#
+#   2. App-rekord az App Store Connect-ben a `dev.szabotar.jorkonvo` bundle
+#      ID-val (a bundle ID a fejlesztői portálon már regisztrálva van, Push
+#      Notifications + App Groups capability-vel). Ez emberi lépés — l.
+#      .hub/status.json "next".
+#
+#   3. Környezeti csoport `jorkonvo_ios` névvel (Teams → ... → Environment
+#      variables), benne opcionálisan az `APP_STORE_APPLE_ID` (az App Store
+#      Connect app numerikus Apple ID-ja) ha a TestFlight submit be van kapcsolva.
+#
+# Amíg 1–2 nincs kész, a `build-unsigned` workflow akkor is lefordítja a
+# projektet (aláírás nélkül, `CODE_SIGNING_ALLOWED=NO`) — ez igazolja, hogy a
+# scaffold fordítható, és nem igényel semmilyen Apple-fiókot.
+# ─────────────────────────────────────────────────────────────────────────────
+
+definitions:
+  # Közös build lépések: Node 20 (a repo `engines.node >= 20`, a Forgejo CI is
+  # node:20), függőségek, web build (matrix-core ELŐBB — l. CLAUDE.md), cap sync.
+  scripts:
+    - &install_node
+      name: npm ci (Node 20 via environment.node)
+      script: |
+        set -e
+        node --version
+        npm ci
+    - &web_build
+      name: Web build (matrix-core → web) + cap sync ios
+      script: |
+        set -e
+        npm run build            # = build:matrix-core && build:web → apps/web/dist
+        cd apps/web
+        npx cap sync ios
+
+workflows:
+  # ───────────────────────────────────────────────────────────────────────────
+  # 1) Aláírás nélküli fordítás — nincs szükség Apple-fiókra.
+  #    Ezt futtasd először, hogy lásd: a scaffold zölden fordul.
+  # ───────────────────────────────────────────────────────────────────────────
+  build-unsigned:
+    name: iOS — unsigned compile check
+    instance_type: mac_mini_m2
+    max_build_duration: 45
+    environment:
+      xcode: latest
+      node: 22
+    triggering:
+      events:
+        - push
+        - pull_request
+      branch_patterns:
+        - pattern: "*"
+          include: true
+    scripts:
+      - name: JorPushCore tests (Megolm vectors, push texts)
+        script: |
+          set -e
+          cd apps/web/ios/App/JorPushCore
+          swift test
+      - *install_node
+      - *web_build
+      - name: Xcode build (no signing)
+        script: |
+          set -e
+          WS=apps/web/ios/App/App.xcworkspace
+          PROJ=apps/web/ios/App/App.xcodeproj
+          TARGET=$([ -d "$WS" ] && echo "-workspace $WS" || echo "-project $PROJ")
+          xcodebuild $TARGET \
+            -scheme App -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -clonedSourcePackagesDirPath .spm-cache \
+            CODE_SIGNING_ALLOWED=NO build
+    artifacts:
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # 2) Aláírt IPA + (opcionális) TestFlight — a fenti 1–2. pont szükséges hozzá.
+  # ───────────────────────────────────────────────────────────────────────────
+  ios-release:
+    name: iOS — signed IPA → TestFlight
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    integrations:
+      app_store_connect: JorData
+    environment:
+      xcode: latest
+      node: 22
+      ios_signing:
+        provisioning_profiles:
+          - profile: jorkonvo
+          - profile: jorkonvo-screenshare-broadcast
+          - profile: jorkonvo-notification-service
+        certificates:
+          - certificate: jor-distribution
+      vars:
+        APP_STORE_APPLE_ID: "6810390282"
+    triggering:
+      events:
+        - tag
+      tag_patterns:
+        - pattern: "ios-v*"
+          include: true
+    scripts:
+      - *install_node
+      - *web_build
+      - name: Apply signing (after cap sync)
+        script: |
+          set -e
+          xcode-project use-profiles
+      - name: Set build number
+        script: |
+          set -e
+          cd apps/web/ios/App
+          # FORCE_BUILD_NUMBER escape hatch (pass as a one-off env var on a
+          # manual API-triggered build): get-latest-testflight-build-number
+          # only sees builds ASC has *finished processing* - a just-uploaded
+          # build's number is already reserved (re-using it 409s) well before
+          # it shows up here, so two ios-release runs close together, or one
+          # whose previous upload failed ASC's own post-upload processing
+          # (e.g. a new extension's first submission taking longer to
+          # validate), both recompute the same blocked number. Bypass with an
+          # explicit number instead of guessing higher and higher blind.
+          if [ -n "${FORCE_BUILD_NUMBER:-}" ]; then
+            agvtool new-version -all "$FORCE_BUILD_NUMBER"
+          else
+            BN=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" 2>/dev/null || echo "0")
+            agvtool new-version -all $((BN + 1))
+          fi
+      - name: IPA build
+        script: |
+          set -e
+          WS=apps/web/ios/App/App.xcworkspace
+          TARGET=$([ -d "$WS" ] && echo "--workspace $WS" || echo "--project apps/web/ios/App/App.xcodeproj")
+          xcode-project build-ipa $TARGET --scheme App
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        # App Store-ra tolást tudatosan NEM — az kézi review-döntés.
+        submit_to_app_store: false
+
+  # Desktop (Windows/Linux) builds are done on the owner's own machine, not here -
+  # Codemagic is used for Apple platforms only (build locally: see RELEASE.md, docs/LINUX_PACKAGING.md).

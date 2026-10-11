@@ -1,0 +1,6 @@
+{
+  "identifier": "default",
+  "description": "Capabilities granted to the main window. What the injected window.jorkonvoDesktop bridge (main.rs's initialization_script) calls - event listening for Rich Presence updates - plus the app-icon unread badge (Discord's 'Enable Unread Message Badge'). External links and navigation are handled entirely on the Rust side (main.rs's on_navigation), so no opener/shell permission is exposed to the frontend at all.",
+  "windows": ["main"],
+  "permissions": ["core:default", "core:event:default", "core:window:allow-set-badge-count"]
+}

@@ -1,0 +1,65 @@
+[package]
+name = "jorkonvo-desktop"
+version = "0.1.3"
+description = "JorKonvo desktop shell"
+edition = "2021"
+rust-version = "1.77"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+# CEF (real Chromium) is used ONLY on Linux: standard distro WebKitGTK ships
+# with WebRTC inert (tauri-apps/tauri#13143, "not planned"), and Chromium is the
+# only way to get getUserMedia/getDisplayMedia there. Windows (WebView2) and
+# macOS (WKWebView) use Tauri's normal wry runtime with the small system webview -
+# bundling ~150 MB of Chromium there would defeat the point of Tauri over Electron.
+#
+# The `cef` feature is what tauri-cli's bundler looks at (crates/tauri-bundler/
+# .../appimage/mod.rs: sharun_cef vs plain linuxdeploy) to pick the CEF-aware
+# AppImage packaging; without it the AppImage builds but crashes on launch
+# (`Invalid file descriptor to ICU data`). It is opt-in - Linux builds pass
+# `--features cef` (scripts/build-linux-appimage.sh does) - so a plain
+# `cargo build` on Windows/macOS never touches CEF.
+[features]
+default = []
+cef = ["tauri/cef", "dep:tauri-runtime-cef"]
+
+[dependencies]
+tauri-runtime-cef = { git = "https://github.com/tauri-apps/tauri", branch = "feat/cef", optional = true }
+tauri-plugin-opener = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls", "json"] }
+url = "2"
+
+# Linux: no wry (no WebKitGTK); the runtime comes from the `cef` feature.
+[target.'cfg(target_os = "linux")'.dependencies]
+tauri = { version = "2", default-features = false, features = ["compression", "common-controls-v6", "dynamic-acl"] }
+
+# Windows/macOS: Tauri's default wry runtime (WebView2 / WKWebView).
+[target.'cfg(not(target_os = "linux"))'.dependencies]
+tauri = { version = "2", features = ["compression", "common-controls-v6", "dynamic-acl"] }
+
+# std has no named-pipe support at all; this is the standard crate for it.
+# Only pulled in on Windows - Linux/macOS use std::os::unix::net directly
+# (discord_rpc.rs), no dependency needed there.
+[target.'cfg(windows)'.dependencies]
+interprocess = "2"
+
+# Pulls in the whole tauri-apps/tauri monorepo at this branch so tauri,
+# tauri-build, tauri-macros etc. all resolve to matching, CEF-feature-aware
+# versions instead of the crates.io releases (which predate the cef feature
+# entirely). Straight from upstream, not a third-party fork.
+[patch.crates-io]
+tauri = { git = "https://github.com/tauri-apps/tauri", branch = "feat/cef" }
+tauri-build = { git = "https://github.com/tauri-apps/tauri", branch = "feat/cef" }
+tauri-macros = { git = "https://github.com/tauri-apps/tauri", branch = "feat/cef" }
+tauri-utils = { git = "https://github.com/tauri-apps/tauri", branch = "feat/cef" }
+tauri-runtime = { git = "https://github.com/tauri-apps/tauri", branch = "feat/cef" }
+tauri-plugin = { git = "https://github.com/tauri-apps/tauri", branch = "feat/cef" }
+# tauri-plugin-opener 2.5.5 (crates.io) has a build.rs written against the
+# older schemars API that the feat/cef-patched tauri-plugin no longer takes
+# (`global_scope_schema` wants `schemars::Schema`, not `RootSchema`) - the
+# official plugins-workspace repo has a matching feat/cef branch that's kept
+# in sync with it.
+tauri-plugin-opener = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "feat/cef" }

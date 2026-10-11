@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <!-- Push notifications (JorKonvoMessagingService). The default values/
+         folder is Hungarian. -->
+    <string name="push_channel_name">Messages</string>
+    <string name="push_channel_desc">New messages, invites and calls while the app is closed</string>
+    <string name="push_new_message">New message</string>
+    <string name="push_encrypted_message">Encrypted message</string>
+    <string name="push_image">Image</string>
+    <string name="push_invite">invited you</string>
+    <string name="push_call">Incoming call</string>
+    <string name="push_you">You</string>
+    <string name="push_sticker">Sticker</string>
+    <string name="push_poll">📊 Poll</string>
+</resources>

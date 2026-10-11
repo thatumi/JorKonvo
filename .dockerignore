@@ -1,0 +1,28 @@
+# Keep the webapp build context (deploy/webapp/Dockerfile, context = repo root) lean.
+node_modules
+**/node_modules
+dist
+**/dist
+# incremental build state - a stale one makes `tsc -b` skip a rebuild it
+# actually needs (and the deploy image builds from a clean checkout anyway)
+*.tsbuildinfo
+**/*.tsbuildinfo
+.tmp
+**/.tmp
+dist-electron
+release
+build
+.git
+*.log
+test/coverage
+e2e/test-results
+e2e/playwright-report
+e2e/synapse/homeserver.db*
+apps/desktop/src-tauri/target
+apps/desktop/src-tauri/gen
+apps/web/android
+**/.DS_Store
+deploy/.env
+deploy/synapse/signing.key
+deploy/**/*.rendered
+deploy/**/*.provisioned

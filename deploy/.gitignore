@@ -1,0 +1,31 @@
+# Rendered configs + secrets - never commit these.
+.env
+synapse/homeserver.yaml
+synapse/signing.key
+synapse/*.log
+synapse/*.pid
+synapse/media_store/
+coturn/turnserver.conf
+mas/config.yaml
+# provision.sh renders this IN PLACE over the checked-in template (its own
+# LIVEKIT_API_KEY/LIVEKIT_API_SECRET placeholders become the real generated
+# secrets) - without this line, running provision.sh leaves a real API
+# secret sitting in a tracked file, one `git add -A` away from being
+# committed (found by actually running provision.sh and checking `git
+# status` afterwards, not just reading the script).
+livekit.yaml
+backups/
+*.rendered
+*.provisioned
+.env.smoke-backup.*
+# legacy: the webapp is a build stage now (deploy/webapp/Dockerfile), not a
+# pre-copied dir
+webapp/dist/
+
+# Terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/*.tfvars
+!terraform/tenant.tfvars.example
+terraform/.terraform.lock.hcl

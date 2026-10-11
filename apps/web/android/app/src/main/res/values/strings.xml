@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">JorKonvo</string>
+    <string name="title_activity_main">JorKonvo</string>
+    <string name="package_name">dev.szabotar.jorkonvo</string>
+    <string name="custom_url_scheme">dev.szabotar.jorkonvo</string>
+    <!-- ScreenCaptureService foreground notification (screen sharing). -->
+    <string name="screen_capture_channel_name">Képernyőmegosztás</string>
+    <string name="screen_capture_channel_desc">Értesítés a képernyőmegosztás ideje alatt</string>
+    <string name="screen_capture_notification_title">Képernyőmegosztás folyamatban</string>
+    <string name="screen_capture_notification_text">A JorKonvo képernyőmegosztása aktív – koppints ide a visszatéréshez.</string>
+    <string name="screen_capture_stop">Leállítás</string>
+    <!-- Push notifications (JorKonvoMessagingService). English in values-en/. -->
+    <string name="push_channel_name">Üzenetek</string>
+    <string name="push_channel_desc">Új üzenetek, meghívások és hívások, amikor az alkalmazás be van zárva</string>
+    <string name="push_new_message">Új üzenet</string>
+    <string name="push_encrypted_message">Titkosított üzenet</string>
+    <string name="push_image">Kép</string>
+    <string name="push_invite">meghívott</string>
+    <string name="push_call">Bejövő hívás</string>
+    <string name="push_you">Te</string>
+    <string name="push_sticker">Matrica</string>
+    <string name="push_poll">📊 Szavazás</string>
+</resources>

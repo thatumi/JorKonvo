@@ -1,0 +1,12 @@
+# Nothing is written into this directory any more - the test Synapse config
+# and its build-time signing key live inside the jorkonvo-e2e-synapse image
+# (see Dockerfile). These lines stay only to catch stale local files from
+# the old bind-mount setup.
+homeserver.db
+homeserver.db-*
+homeserver.pid
+media_store/
+state/
+*.log
+localhost.signing.key
+localhost.log.config

@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>JorKonvo — Privacy Policy / Adatvédelmi tájékoztató</title>
+  <meta name="description" content="JorKonvo privacy policy (English and Hungarian) / A JorKonvo adatvédelmi tájékoztatója (angol és magyar nyelven).">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #ffffff;
+      --fg: #1f2328;
+      --muted: #59636e;
+      --border: #d1d9e0;
+      --accent: #5865f2;
+      --code-bg: #f3f4f6;
+      --callout-bg: #f6f8fa;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1e1f22;
+        --fg: #e6e7ea;
+        --muted: #a3a6ad;
+        --border: #3a3c42;
+        --accent: #8b95ff;
+        --code-bg: #2b2d31;
+        --callout-bg: #26282c;
+      }
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    main, header, footer { max-width: 46rem; margin: 0 auto; padding: 0 1rem; }
+    header { padding-top: 2rem; }
+    h1 { font-size: 1.75rem; line-height: 1.25; margin: 0 0 .5rem; }
+    h2 { font-size: 1.4rem; margin: 2.5rem 0 .75rem; padding-bottom: .3rem; border-bottom: 1px solid var(--border); }
+    h3 { font-size: 1.1rem; margin: 1.75rem 0 .5rem; }
+    p, ul, ol { margin: 0 0 1rem; }
+    li { margin: .25rem 0; }
+    a { color: var(--accent); }
+    code {
+      font: .9em/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: var(--code-bg);
+      padding: .1em .3em;
+      border-radius: 4px;
+      overflow-wrap: anywhere;
+    }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
+    .meta { color: var(--muted); font-style: italic; }
+    .lang-switch { display: flex; gap: .5rem; margin: 1rem 0 0; padding: 0; list-style: none; }
+    .lang-switch a {
+      display: inline-block;
+      padding: .3rem .8rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .callout { background: var(--callout-bg); border: 1px solid var(--border); border-radius: 8px; padding: .75rem 1rem; margin: 0 0 1rem; }
+    .callout > :last-child { margin-bottom: 0; }
+    footer { margin-top: 3rem; padding-bottom: 2rem; border-top: 1px solid var(--border); padding-top: 1rem; color: var(--muted); font-size: .9rem; }
+    footer nav { display: flex; flex-wrap: wrap; gap: 1rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>JorKonvo — Privacy Policy / Adatvédelmi tájékoztató</h1>
+    <p class="meta">Last updated / Utolsó frissítés: 2026-09-29</p>
+    <nav aria-label="Language / Nyelv">
+      <ul class="lang-switch">
+        <li><a href="#en" hreflang="en" lang="en">English</a></li>
+        <li><a href="#hu" hreflang="hu" lang="hu">Magyar</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <div lang="en">
+      <p>This document is written to be hostable as-is (e.g. at a <code>/privacy</code> URL)
+      and covers both languages. It describes what the <strong>JorKonvo app itself</strong>
+      does, and — because JorKonvo is a Matrix client, not a standalone
+      service — what the <strong>Matrix homeserver you connect to</strong> can and cannot
+      see. These are two different things and this policy is explicit about
+      which is which.</p>
+    </div>
+    <section id="en" lang="en" aria-labelledby="en-title">
+      <h2 id="en-title">English</h2>
+      <h3 id="en-1">What JorKonvo is</h3>
+      <p>JorKonvo is a Matrix client application — like a web browser is a client
+      for websites, JorKonvo is a client for the Matrix chat protocol. It does
+      not run its own chat service that all users share. When you sign in, you
+      choose (or type) the address of a <strong>Matrix homeserver</strong>, and that
+      homeserver — not JorKonvo's developer — hosts your account, your
+      messages, and your media.</p>
+      <p>By default the sign-in screen is prefilled with
+      <code>https://matrix.szabotar.dev</code>, a homeserver the developer operates for
+      their own use and for testing. <strong>This is a convenience default, not a
+      requirement</strong> — the homeserver field is a plain, editable text box. You
+      can sign in to any Matrix homeserver you already have an account on, or
+      run your own (the developer publishes a self-hosting stack, see
+      <code>deploy/README.md</code> in the source repository, and separately offers
+      managed, individually-hosted Matrix servers as a paid service —
+      <code>deploy/RENTAL.md</code>). Whichever homeserver you use, that homeserver
+      operator — which may or may not be JorKonvo's developer — is the actual
+      data controller for your account.</p>
+      <h3 id="en-2">What the homeserver operator can see</h3>
+      <p>Regardless of which homeserver you use, standard Matrix protocol
+      metadata is visible to whoever operates it, because the server has to
+      process it to route your messages and calls:</p>
+      <ul>
+      <li>Your account identifier, registration email/phone (if you provided
+        one), and device list</li>
+      <li>Which rooms and spaces you are a member of, and your membership
+        events (join/leave/invite/kick/ban)</li>
+      <li>Timestamps of when messages were sent and received</li>
+      <li>Who you sent a message <em>to</em> (i.e., which room), even when the
+        message content is encrypted — room membership is not secret from
+        the server</li>
+      <li>Read receipts and typing indicators, if enabled</li>
+      <li>Any content sent in a room that is <strong>not</strong> end-to-end encrypted
+        (JorKonvo shows encrypted rooms with a lock icon; rooms without that
+        icon are visible to the server in plain text)</li>
+      <li>IP address at time of connection (standard for any web/app client)</li>
+      <li>For voice/video calls: the server's call-signalling components
+        (LiveKit SFU, <code>lk-jwt-service</code>, coturn) see call metadata (who is in a
+        call, call duration) and, for group calls via the SFU, route the
+        encoded media streams — group calls are not end-to-end encrypted media
+        today (this matches how LiveKit-based Matrix calls generally work);
+        1:1 calls are direct peer-to-peer WebRTC and only pass through TURN
+        relays that can't read the encrypted media itself</li>
+      </ul>
+      <h3 id="en-3">What is end-to-end encrypted (and who can't see it)</h3>
+      <p>For any room marked encrypted in JorKonvo:</p>
+      <ul>
+      <li><strong>Message content, file/image attachments, and edit/reaction content</strong>
+        are encrypted on your device before they leave it, using the Matrix
+        protocol's standard encryption (implemented in JorKonvo via
+        <code>@matrix-org/matrix-sdk-crypto-wasm</code>, the same "rust-crypto" engine
+        used by Element and other mainstream Matrix clients). Only devices you
+        have verified — or that were present in the room when the message was
+        sent and are trusted by the room's key-sharing rules — can decrypt
+        this content.</li>
+      <li>The homeserver operator, including JorKonvo's own developer when
+        running <code>matrix.szabotar.dev</code>, <strong>cannot read the content</strong> of
+        encrypted messages or attachments. This is independently verifiable:
+        the app's own server-side message search returns zero results in
+        encrypted rooms, because the search index on the server is built from
+        content the server can actually read — and for encrypted rooms, it has
+        none. JorKonvo works around this with a local, on-device fallback
+        search over messages already decrypted and loaded on your device.</li>
+      <li>Device (SAS/emoji) verification lets you confirm you're actually
+        talking to the device you think you are, resisting a
+        malicious-server-in-the-middle attack that would otherwise let a
+        compromised server add an unverified "ghost" device to receive keys.</li>
+      <li>Key backup (4S / recovery key) is itself encrypted with a key derived
+        from your recovery key/passphrase before being stored on the server —
+        the server stores only encrypted backup data it cannot read.</li>
+      </ul>
+      <h3 id="en-4">Device permissions the app requests (Android/iOS)</h3>
+      <p>The mobile apps only request an OS permission when a specific, shipped
+      feature actually needs it — never speculatively "just in case." As of
+      this writing (checked directly against <code>AndroidManifest.xml</code> and
+      <code>Info.plist</code> in the source repository):</p>
+      <ul>
+      <li><strong>Camera</strong> — the QR sign-in scanner, the camera check before joining a
+        call, video calls, and "Take a photo" in the attachment picker.</li>
+      <li><strong>Microphone</strong> — recording a voice message, and the audio leg of
+        voice/video calls.</li>
+      <li><strong>Photo library</strong> — attaching an existing photo to a message, and
+        setting a profile/space/room picture. (On Android this goes through the
+        system's own file/photo picker, so no separate storage or media
+        permission is declared.)</li>
+      <li><strong>Location</strong> (iOS, "while using the app" only — Android does not
+        declare a location permission because it uses the browser-standard
+        Geolocation API through the WebView, which prompts at the point of
+        use) — sharing your location in a message, and live location sharing.
+        JorKonvo never reads your location in the background or without you
+        explicitly starting one of those two actions.</li>
+      <li><strong>Notifications</strong> (iOS asks once after you sign in; Android 13+
+        requires it just to show <em>any</em> notification) — for push notifications
+        while the app is closed, see “Notifications” below — and <strong>audio-routing control</strong> (Android's
+        <code>MODIFY_AUDIO_SETTINGS</code>, used only to route call audio to the correct
+        output, e.g. speakerphone — it does not grant any additional access to
+        audio content beyond the Microphone permission above).</li>
+      <li><strong>Screen capture for in-call screen sharing</strong> (Android only:
+        <code>FOREGROUND_SERVICE</code> and <code>FOREGROUND_SERVICE_MEDIA_PROJECTION</code>, for a
+        <code>mediaProjection</code>-type foreground service). The Android WebView cannot
+        capture the screen by itself, so on Android JorKonvo uses the system's
+        native <code>MediaProjection</code> API for this one feature. Capture starts only
+        after you tap "Share screen" during a call <strong>and</strong> accept Android's own
+        system consent prompt; while sharing is active, Android shows an ongoing
+        notification (with a Stop action). Capture ends when you turn sharing
+        off, leave the call, or tap Stop in the notification. The captured
+        screen images are sent only into the call you are sharing to — like
+        camera video, they go through that call's infrastructure (see "What the
+        homeserver operator can see" above for group calls) — and are not
+        recorded or stored by the app. Screen audio is not captured. On
+        desktop and in the browser, screen sharing uses the browser's/OS's own
+        capture prompt instead.</li>
+      <li><strong>Screen broadcast for in-call screen sharing</strong> (iOS only: a
+        ReplayKit broadcast upload extension that ships inside the app). iOS has no way
+        for an app to capture the screen by itself, so on iOS JorKonvo uses Apple's
+        ReplayKit screen broadcast for this one feature. Capture starts only after you
+        tap "Share screen" during a call <strong>and</strong> confirm Apple's own "Start
+        Broadcast" system prompt; while sharing is active, iOS shows its own recording
+        indicator (red status bar / Dynamic Island). Capture ends when you turn sharing
+        off in the app, leave the call, or stop it from that system indicator. The
+        captured screen images are handed from the extension to the app on your device
+        only, then sent only into the call you are sharing to — like camera video — and
+        are not recorded or stored by the app beyond the single most recent frame kept
+        temporarily on your device while sharing. Screen audio is not captured.</li>
+      </ul>
+      <p>JorKonvo does <strong>not</strong> request access to your contacts, Bluetooth, broad
+      photo/file storage, or background location, and it never captures your
+      screen in the background or without an active screen share you started
+      yourself as described above.
+      None of the permissions above let JorKonvo's developer see anything the
+      app doesn't already handle as part of a feature you actively used — a
+      photo you chose to attach, a call you chose to join, a location you
+      chose to share. See "What is end-to-end encrypted" above for how that
+      content is protected once captured, and "What JorKonvo (the app) stores
+      locally on your device" below for what stays on-device.</p>
+      <h3 id="en-5">What JorKonvo (the app) stores locally on your device</h3>
+      <ul>
+      <li>Your Matrix session tokens and encryption keys (via the browser's
+        IndexedDB, or platform-equivalent storage in the desktop/mobile
+        shells), so you don't need to sign in and re-verify every time.</li>
+      <li>For push notifications in the iPhone/iPad and Android apps (while
+        background notifications are on and the preview is not set to
+        "Hidden"): a small, encrypted notification store the phone uses to build
+        notifications while the app is closed — your homeserver's address, the
+        account's access token, the preview setting, the room keys needed to
+        decrypt messages (only in "Full preview" mode), a small directory of
+        room names, direct-message flags, space membership and member display
+        names, and small avatar thumbnails (these are not encrypted — room
+        members can see them anyway). On Android it lives in the app's private
+        storage, encrypted with AES-256-GCM using a non-exportable Android
+        Keystore key. On iPhone/iPad it lives in the app's App Group container,
+        shared only with the app's own extensions (the notification extension reads it),
+        encrypted with AES-256-GCM using a key kept in the iOS Keychain (this
+        device only, available after the first unlock), and excluded from
+        backups. It never leaves the device, and it is deleted when you turn
+        push off on that device, set the preview to "Hidden", or sign out of
+        the account. See “Notifications” below.</li>
+      <li>UI preferences: theme, notification/mute settings, noise-suppression
+        and push-to-talk settings — these are stored locally
+        (<code>localStorage</code>/device storage) and are never sent anywhere except
+        where a setting (like room mute) is itself a server-side Matrix
+        feature.</li>
+      <li>JorKonvo's developer does not operate any analytics, tracking, or
+        crash-reporting service that JorKonvo phones home to. The app talks to
+        the homeserver you configured, to that homeserver's associated
+        call infrastructure (LiveKit/coturn) when you make a call, and — if
+        background notifications are on — to your device's push service (see
+        “Notifications” below). Nothing else.</li>
+      </ul>
+      <h3 id="en-6">Notifications</h3>
+      <p>While JorKonvo is open, notifications are created locally on your device
+      from what your session already receives from your homeserver.</p>
+      <p>To notify you while the app is <strong>closed</strong>, JorKonvo uses push
+      notifications: on iPhone/iPad through Apple Push Notification service
+      (APNs), on Android through Google Firebase Cloud Messaging (FCM), and in a
+      web browser through that browser's Web Push service. You can turn this
+      off per device in Settings → Notifications → Background notifications, or
+      in your phone's system settings. The desktop app does not use push.</p>
+      <p>How it works: the app gets a push token from your device and registers
+      it with your homeserver (a Matrix "pusher": the token, the app type, a
+      device name and the push gateway's address). When a new event matches
+      your notification settings, your homeserver sends a notification to
+      JorKonvo's push gateway at <code>push.szabotar.dev</code> (operated by JorKonvo's
+      developer, running the open-source Matrix gateway Sygnal), which hands
+      it to Apple, Google or your browser vendor for delivery to your device.</p>
+      <p>What a notification contains depends on where you use JorKonvo.</p>
+      <p><strong>iPhone/iPad and Android apps.</strong> The pusher uses Matrix's
+      "event_id_only" format, so your homeserver sends the push gateway — and
+      the gateway sends Apple / Google — only:</p>
+      <ul>
+      <li>the room ID and event ID of the new message;</li>
+      <li>the unread-message count (for the app badge) and the push token;</li>
+      <li>which of the accounts signed in on the device the notification is for
+        (your Matrix user ID — the app itself puts it into the pusher's data
+        when registering it).</li>
+      </ul>
+      <p>On iPhone/iPad the notification sent to Apple also carries a fixed
+      "New message" text as a placeholder. <strong>No sender name, room name,
+      message text or encrypted message passes through the push gateway or
+      through Apple / Google.</strong></p>
+      <p>Your phone then builds the notification itself: it fetches the message
+      from your homeserver over HTTPS using your account's access token, and —
+      in an encrypted room — decrypts it on the device with the room keys the
+      app saved to the device while it was running (see "What JorKonvo (the
+      app) stores locally on your device" above). Decryption happens only on
+      your device; nothing is sent to anyone else.</p>
+      <p>What the notification shows is a per-device setting (Settings →
+      Notifications → Notification content):</p>
+      <ul>
+      <li><strong>Full preview</strong> (default): the sender and the message text, encrypted
+        rooms included.</li>
+      <li><strong>Sender only</strong>: no message keys are stored on the device; the
+        notification shows the sender and "New message".</li>
+      <li><strong>Hidden</strong>: nothing is stored on the device; the notification only
+        says "New message".</li>
+      </ul>
+      <p>Honest limits: if a message uses a room key that arrived after you last
+      opened the app, the phone doesn't have that key yet, so the notification
+      shows "Encrypted message". If your homeserver can't be reached (no
+      connection, expired sign-in), the notification falls back to "New
+      message" or the sender only — it is not lost.</p>
+      <p>On iPhone/iPad, notifications also show the sender's or the space's
+      picture (Apple's Communication Notifications). For this the app records
+      the message as a conversation locally on the device (an
+      <code>INSendMessageIntent</code>). This stays on your device; as with other
+      messaging apps, iOS may use it for features such as Siri suggestions or
+      share-sheet suggestions. Nothing is sent to Apple beyond normal iOS
+      behaviour.</p>
+      <p><strong>Web browser.</strong> Web Push is unchanged and uses the full format:</p>
+      <ul>
+      <li><strong>Unencrypted rooms:</strong> the sender's name and Matrix ID, the room name, and the message text, so the notification can show who wrote what. <strong>This text passes through the push gateway and through your browser vendor's push service.</strong></li>
+      <li><strong>Encrypted rooms:</strong> the sender, the room name, technical identifiers (room and event ID) and the still-encrypted message, which neither the gateway nor the browser vendor can read. The notification shows "Encrypted message".</li>
+      <li>The unread-message count and the push token.</li>
+      </ul>
+      <p>The push gateway does not store notifications. It forwards them and keeps
+      short-lived technical logs (time, push token, room/event ID, delivery
+      result — no message text) for troubleshooting, rotated after a few
+      megabytes. (For the phone apps, a notification contains nothing but such
+      identifiers in the first place.) On Android, Google's Firebase Messaging library also creates a
+      Firebase installation ID that Google uses to deliver messages; JorKonvo
+      does not use Firebase Analytics or any other Firebase service.</p>
+      <h3 id="en-7">Your choices</h3>
+      <ul>
+      <li>You can leave any room, <a href="delete-account.html#en">delete your account</a> (subject to your
+        homeserver's support for account deletion), or self-host your own
+        homeserver for full control over your data.</li>
+      <li>You can verify or un-verify devices, revoke sessions from other
+        devices, and block/ignore other users from Settings.</li>
+      <li>Because JorKonvo can connect to any homeserver, if you're unhappy with
+        how a particular homeserver operator handles your data, you can move
+        to a different one (Matrix supports account portability efforts, but
+        full portability is still evolving protocol-wide — check the specific
+        homeserver's own policy).</li>
+      </ul>
+      <h3 id="en-8">Third parties</h3>
+      <ul>
+      <li>If a homeserver operator federates with other Matrix servers (the
+        default for most public homeservers), messages and metadata for rooms
+        that include users on other servers are also visible to those other
+        servers' operators, per normal Matrix federation. This is a property
+        of the Matrix network, not something JorKonvo adds.</li>
+      <li>Voice/video call infrastructure (LiveKit, coturn) is typically
+        operated by the same party as your homeserver.</li>
+      <li>Push notifications (when enabled) are delivered by Apple (APNs),
+        Google (Firebase Cloud Messaging) or your browser vendor's push
+        service, relayed by JorKonvo's push gateway. For the iPhone/iPad and
+        Android apps these carry only identifiers (room/event ID, unread count,
+        your Matrix ID), not message content — see “Notifications”.</li>
+      </ul>
+      <h3 id="en-9">Contact</h3>
+      <p>Questions about this policy, or about a specific homeserver's data
+      practices if the developer operates it: <strong>szabotar@szabotar.dev</strong></p>
+    </section>
+    <hr>
+    <section id="hu" lang="hu" aria-labelledby="hu-title">
+      <h2 id="hu-title">Magyar</h2>
+      <h3 id="hu-1">Mi a JorKonvo</h3>
+      <p>A JorKonvo egy Matrix kliens alkalmazás — ahogy egy böngésző kliens a
+      weboldalakhoz, úgy a JorKonvo kliens a Matrix csevegési protokollhoz.
+      Nem üzemeltet saját, minden felhasználó által megosztott csevegő-
+      szolgáltatást. Bejelentkezéskor kiválasztod (vagy beírod) egy <strong>Matrix
+      szerver</strong> címét, és ez a szerver — nem a JorKonvo fejlesztője — tárolja
+      a fiókodat, az üzeneteidet és a médiáidat.</p>
+      <p>A bejelentkező képernyő alapértelmezetten a <code>https://matrix.szabotar.dev</code>
+      címet mutatja, amit a fejlesztő saját használatra és teszteléshez
+      üzemeltet. <strong>Ez csak egy kényelmi alapérték, nem kötelező</strong> — a szerver-
+      mező egy sima, szabadon szerkeszthető szövegmező. Bejelentkezhetsz bármely
+      Matrix szerverre, amin már van fiókod, vagy futtathatsz sajátot (a
+      fejlesztő közzétesz egy önálló üzemeltetéshez szükséges csomagot, l. a
+      forráskód <code>deploy/README.md</code> fájlját, és külön, fizetős szolgáltatásként
+      egyedi, kezelt Matrix szervereket is kínál — <code>deploy/RENTAL.md</code>). Bármelyik
+      szervert használod, annak üzemeltetője — aki lehet, hogy nem a JorKonvo
+      fejlesztője — a tényleges adatkezelő a fiókodra nézve.</p>
+      <h3 id="hu-2">Mit lát a szerver üzemeltetője</h3>
+      <p>Attól függetlenül, melyik szervert használod, a Matrix protokoll szokásos
+      metaadatai láthatók az üzemeltető számára, mert a szervernek fel kell
+      dolgoznia ezeket az üzenetek/hívások továbbításához:</p>
+      <ul>
+      <li>Fiókazonosító, regisztrációs email/telefonszám (ha megadtad), eszköz-
+        lista</li>
+      <li>Mely terek/szobák tagja vagy, és a tagsági események (csatlakozás/
+        kilépés/meghívás/kirúgás/kitiltás)</li>
+      <li>Az üzenetek küldési/fogadási időbélyegei</li>
+      <li>Kinek küldtél üzenetet (azaz melyik szobába), akkor is, ha a tartalom
+        titkosított — a szoba-tagság nem titok a szerver elől</li>
+      <li>Olvasási visszajelzések és gépelés-jelzők, ha be vannak kapcsolva</li>
+      <li>Bármely tartalom, ami <strong>nem</strong> végpontok között titkosított szobában
+        született (a JorKonvo lakat ikonnal jelzi a titkosított szobákat; ami
+        nélküle van, azt a szerver nyílt szövegként látja)</li>
+      <li>IP-cím a kapcsolódáskor (ez minden web/app kliensnél így van)</li>
+      <li>Hang-/videóhívásoknál: a szerver hívás-jelzési komponensei (LiveKit
+        SFU, <code>lk-jwt-service</code>, coturn) látják a hívás metaadatait (ki van
+        bent, meddig tartott), és csoportos hívásnál az SFU-n át a kódolt
+        médiafolyamot is továbbítják — a csoportos hívások médiája ma NEM
+        végpontok közötti titkosítású (ez a LiveKit-alapú Matrix hívások
+        általános jellemzője); az 1:1 hívások közvetlen peer-to-peer WebRTC-n
+        mennek, a TURN relay csak továbbít, a titkosított médiát nem tudja
+        elolvasni</li>
+      </ul>
+      <h3 id="hu-3">Mi van végpontok között titkosítva (és ki elől van elrejtve)</h3>
+      <p>Minden, a JorKonvóban titkosítottként jelölt szobában:</p>
+      <ul>
+      <li><strong>Az üzenet tartalma, a fájl-/kép-csatolmányok, a szerkesztések és
+        reakciók tartalma</strong> már az eszközödön titkosítva lesz, mielőtt elhagyná
+        azt, a Matrix protokoll szabványos titkosításával (a JorKonvóban a
+        <code>@matrix-org/matrix-sdk-crypto-wasm</code> — az "rust-crypto" motor — végzi,
+        amit az Element és más elterjedt Matrix kliensek is használnak). Csak
+        az általad ellenőrzött eszközök — vagy azok, amik az üzenetküldéskor a
+        szobában voltak és a szoba kulcsmegosztási szabályai szerint
+        megbízhatók — tudják visszafejteni ezt a tartalmat.</li>
+      <li>A szerver üzemeltetője — beleértve a JorKonvo fejlesztőjét is, amikor
+        a <code>matrix.szabotar.dev</code>-et üzemelteti — <strong>nem tudja elolvasni</strong> a
+        titkosított üzenetek/csatolmányok tartalmát. Ez önállóan is
+        ellenőrizhető: az app szerver-oldali üzenetkeresése titkosított
+        szobában mindig 0 találatot ad, mert a szerveren futó keresési index
+        csak olyan tartalomból épül, amit a szerver ténylegesen el tud
+        olvasni — titkosított szobáknál ilyen nincs. A JorKonvo ezt egy
+        helyi, eszközön futó tartalék-kereséssel hidalja át, a már
+        visszafejtett és betöltött üzenetek közt.</li>
+      <li>Az eszköz-ellenőrzés (SAS/emoji) megerősíti, hogy tényleg azzal az
+        eszközzel beszélsz, amivel gondolod — ez védelmet nyújt egy rosszindulatú,
+        köztes szerver ellen, ami különben egy nem-ellenőrzött "szellem"
+        eszközt csempészhetne be kulcsfogadásra.</li>
+      <li>A kulcs-mentés (4S / recovery key) maga is a recovery key-ből/
+        jelszóból származtatott kulccsal van titkosítva, mielőtt a szerverre
+        kerülne — a szerver csak titkosított, számára olvashatatlan mentési
+        adatot tárol.</li>
+      </ul>
+      <h3 id="hu-4">Milyen eszköz-engedélyeket kér az app (Android/iOS)</h3>
+      <p>A mobil alkalmazások csak akkor kérnek egy operációs rendszeri
+      engedélyt, amikor egy konkrét, ténylegesen elérhető funkcióhoz tényleg
+      szükség van rá — sosem "biztos, ami biztos" alapon. A jelen állapot
+      szerint (közvetlenül az <code>AndroidManifest.xml</code> és az <code>Info.plist</code> fájlok
+      ellenőrzésével):</p>
+      <ul>
+      <li><strong>Kamera</strong> — a QR-kódos bejelentkezés szkennere, a hívás előtti
+        kamera-ellenőrzés, videohívások, és a "Fénykép készítése" opció a
+        csatolmány-választóban.</li>
+      <li><strong>Mikrofon</strong> — hangüzenet felvétele, és a hang-/videohívások hang
+        csatornája.</li>
+      <li><strong>Fotókönyvtár</strong> — meglévő fénykép csatolása üzenethez, valamint
+        profil-/tér-/szobakép beállítása. (Androidon ez a rendszer saját fájl-/
+        fotóválasztóján keresztül megy, ezért külön tárhely- vagy média-engedély
+        nincs deklarálva.)</li>
+      <li><strong>Helyadat</strong> (csak iOS, "az app használata közben" - Androidon nincs
+        külön helyadat-engedély deklarálva, mert ott a WebView szabványos
+        böngésző Geolocation API-ját használja, ami használatkor kér
+        engedélyt) — helyed megosztása üzenetben, és élő helymegosztás. A
+        JorKonvo sosem olvassa a helyadatodat háttérben vagy e két konkrét
+        művelet explicit elindítása nélkül.</li>
+      <li><strong>Értesítések</strong> (iOS a bejelentkezés után egyszer rákérdez; Android
+        13+ ezt megköveteli BÁRMILYEN értesítés megjelenítéséhez) — a bezárt
+        appnál is működő push-értesítésekhez, l. „Értesítések” lent — és <strong>hangútvonal-vezérlés</strong> (Android
+        <code>MODIFY_AUDIO_SETTINGS</code>, kizárólag a hívás hangjának megfelelő
+        kimenetre - pl. hangszóróra - irányításához; a fenti Mikrofon
+        engedélyen túl semmilyen extra hozzáférést nem ad).</li>
+      <li><strong>Képernyőrögzítés a hívásbeli képernyőmegosztáshoz</strong> (csak Android:
+        <code>FOREGROUND_SERVICE</code> és <code>FOREGROUND_SERVICE_MEDIA_PROJECTION</code>, egy
+        <code>mediaProjection</code> típusú előtérszolgáltatáshoz). Az Android WebView
+        magától nem tudja rögzíteni a képernyőt, ezért Androidon a JorKonvo
+        ehhez az egy funkcióhoz a rendszer natív <code>MediaProjection</code> API-ját
+        használja. A rögzítés csak akkor indul el, ha hívás közben megérinted a
+        "Képernyőmegosztás" gombot, <strong>és</strong> elfogadod az Android saját,
+        rendszerszintű hozzájárulás-kérő ablakát; amíg a megosztás aktív, az
+        Android egy folyamatos értesítést mutat (Leállítás gombbal). A rögzítés
+        véget ér, ha kikapcsolod a megosztást, kilépsz a hívásból, vagy az
+        értesítésben a Leállításra koppintasz. A rögzített képernyőképek csak
+        abba a hívásba kerülnek, ahová megosztod őket — a kamera videójához
+        hasonlóan az adott hívás infrastruktúráján mennek át (a csoportos
+        hívásokról l. fentebb a "Mit lát a szerver üzemeltetője" szakaszt) —,
+        az app nem rögzíti és nem tárolja őket. Hangot a képernyőmegosztás nem
+        rögzít. Asztali gépen és böngészőben a képernyőmegosztás a böngésző/
+        operációs rendszer saját rögzítés-engedélyező ablakán megy.</li>
+      <li><strong>Képernyő-közvetítés a hívásbeli képernyőmegosztáshoz</strong> (csak
+        iOS: az appba épített ReplayKit közvetítő kiegészítő). iOS-en egy app magától
+        nem tudja rögzíteni a képernyőt, ezért iOS-en a JorKonvo ehhez az egy funkcióhoz
+        az Apple ReplayKit képernyő-közvetítését használja. A rögzítés csak akkor indul
+        el, ha hívás közben megérinted a "Képernyőmegosztás" gombot, <strong>és</strong>
+        jóváhagyod az Apple saját "Közvetítés indítása" rendszerablakát; amíg a
+        megosztás aktív, az iOS a saját felvétel-jelzőjét mutatja (piros állapotsor /
+        Dynamic Island). A rögzítés véget ér, ha az appban kikapcsolod a megosztást,
+        kilépsz a hívásból, vagy a rendszer jelzőjéből leállítod. A rögzített
+        képernyőképek a kiegészítőtől csak az eszközödön belül jutnak el az apphoz,
+        onnan pedig csak abba a hívásba kerülnek, ahová megosztod őket — a kamera
+        videójához hasonlóan —, és az app nem rögzíti, nem tárolja őket, kivéve a
+        legutolsó képkockát, amely megosztás közben ideiglenesen az eszközödön marad.
+        Hangot a képernyőmegosztás nem rögzít.</li>
+      </ul>
+      <p>A JorKonvo <strong>nem</strong> kér hozzáférést a névjegyeidhez, Bluetooth-hoz, széles
+      körű fotó-/fájltárolóhoz vagy háttér-helyadathoz, és sosem rögzíti a
+      képernyődet a háttérben, vagy egy általad, a fent leírt módon elindított,
+      aktív képernyőmegosztás nélkül. A fenti engedélyek egyike sem ad
+      a JorKonvo fejlesztőjének olyan hozzáférést, amit az app már ne kezelne
+      egy általad ténylegesen használt funkció részeként — egy fénykép, amit
+      csatoltál, egy hívás, amihez csatlakoztál, egy helyadat, amit
+      megosztottál. Lásd fentebb a "Mi van végpontok között titkosítva"
+      szakaszt arról, hogyan van védve ez a tartalom, és lentebb a "Mit tárol a
+      JorKonvo (az app) helyben" szakaszt arról, mi marad az eszközön.</p>
+      <h3 id="hu-5">Mit tárol a JorKonvo (az app) helyben, az eszközödön</h3>
+      <ul>
+      <li>A Matrix munkamenet-tokeneket és titkosítási kulcsokat (böngészőben
+        IndexedDB-n, az asztali/mobil verzióban a platform megfelelő
+        tárolóján keresztül), hogy ne kelljen minden alkalommal újra
+        bejelentkezni és ellenőrizni.</li>
+      <li>Az iPhone/iPad és Android app push-értesítéseihez (ha a
+        háttér-értesítések be vannak kapcsolva, és az előnézet nem „Rejtett”):
+        egy kis, titkosított értesítési tárolót, amiből a telefon bezárt appnál
+        is össze tudja állítani az értesítést — a szervered címét, a fiók
+        hozzáférési tokenjét, az előnézet beállítását, az üzenetek
+        visszafejtéséhez szükséges szobakulcsokat (csak „Teljes előnézet”
+        módban), egy kis jegyzéket a szobák nevéről, arról, melyik szoba
+        közvetlen üzenet (DM), a terek tagságáról és a tagok megjelenített
+        nevéről, valamint kis profilkép-bélyegképeket (ezek nincsenek
+        titkosítva — a szoba tagjai amúgy is látják őket). Androidon ez az app
+        privát tárhelyén van, AES-256-GCM titkosítással, egy nem exportálható
+        Android Keystore-kulccsal. iPhone/iPaden az app App Group tárolójában
+        van, amelyhez rajta kívül csak a saját kiegészítői (az értesítési
+        kiegészítő olvassa) férnek hozzá, AES-256-GCM titkosítással, az iOS kulcskarikájában
+        (Keychain) tartott kulccsal (csak ezen az eszközön, az első feloldás
+        után érhető el), és kimarad a biztonsági mentésekből. Sosem hagyja el
+        az eszközt, és törlődik, ha az adott eszközön kikapcsolod a pusht, az
+        előnézetet „Rejtett”-re állítod, vagy kijelentkezel a fiókból. L.
+        „Értesítések” lent.</li>
+      <li>Felület-beállítások: téma, értesítési/némítási beállítások, zajszűrés
+        és push-to-talk beállítások — ezek helyben (<code>localStorage</code>/eszköz-
+        tároló) vannak, és sehova nem kerülnek elküldésre, kivéve ha egy
+        beállítás (pl. szoba némítása) maga is szerver-oldali Matrix funkció.</li>
+      <li>A JorKonvo fejlesztője nem üzemeltet semmilyen analitikai, nyomkövető
+        vagy hibajelentő szolgáltatást, amihez a JorKonvo "hazatelefonálna".
+        Az app a te beállított szerveredhez beszél, a hívásokhoz kapcsolódó
+        infrastruktúrához (LiveKit/coturn), amikor hívást kezdeményezel, és —
+        ha a háttér-értesítések be vannak kapcsolva — az eszközöd push-
+        szolgáltatásához (l. „Értesítések” lent). Máshoz nem.</li>
+      </ul>
+      <h3 id="hu-6">Értesítések</h3>
+      <p>Amíg a JorKonvo nyitva van, az értesítések helyben, az eszközödön
+      készülnek abból, amit a munkamenet amúgy is megkap a szerveredtől.</p>
+      <p>Hogy <strong>bezárt</strong> appnál is értesítést kapj, a JorKonvo push-értesítést
+      használ: iPhone/iPad esetén az Apple Push Notification service-en (APNs),
+      Androidon a Google Firebase Cloud Messagingen (FCM), böngészőben pedig az
+      adott böngésző Web Push szolgáltatásán keresztül. Eszközönként
+      kikapcsolható: Beállítások → Értesítések → Háttér-értesítések, vagy a
+      telefon rendszerbeállításaiban. Az asztali app nem használ pusht.</p>
+      <p>Hogyan működik: az app push-tokent kér az eszköztől, és regisztrálja a
+      szervereden (Matrix „pusher”: a token, az app típusa, egy eszköznév és a
+      push-átjáró címe). Ha egy új esemény az értesítési beállításaid szerint
+      értesítést ér, a szervered elküldi azt a JorKonvo push-átjárójának
+      (<code>push.szabotar.dev</code>; a JorKonvo fejlesztője üzemelteti, a nyílt
+      forráskódú Sygnal Matrix-átjáróval), ami továbbadja az Apple-nek, a
+      Google-nek vagy a böngésző gyártójának, és ők juttatják el az eszközödre.</p>
+      <p>Hogy mit tartalmaz egy értesítés, az attól függ, hol használod a
+      JorKonvót.</p>
+      <p><strong>iPhone/iPad és Android app.</strong> A pusher a Matrix „event_id_only”
+      formátumát használja, így a szervered a push-átjárónak — az átjáró pedig
+      az Apple-nek / a Google-nek — csak ezt küldi el:</p>
+      <ul>
+      <li>az új üzenet szoba- és eseményazonosítóját;</li>
+      <li>az olvasatlan üzenetek számát (az ikon jelvényéhez) és a push-tokent;</li>
+      <li>azt, hogy az eszközön bejelentkezett fiókok közül melyiknek szól az
+        értesítés (a Matrix-azonosítódat — ezt maga az app teszi bele a pusher
+        adataiba a regisztráláskor).</li>
+      </ul>
+      <p>iPhone/iPad esetén az Apple-nek küldött értesítésben ezen felül egy fix
+      „Új üzenet” helyőrző szöveg is szerepel. <strong>Sem a feladó neve, sem a
+      szoba neve, sem az üzenet szövege, sem a titkosított üzenet nem megy át
+      a push-átjárón, sem az Apple / a Google push-szolgáltatásán.</strong></p>
+      <p>Az értesítést ezután maga a telefon állítja össze: HTTPS-en lekéri az
+      üzenetet a szerveredtől a fiókod hozzáférési tokenjével, titkosított
+      szobában pedig az eszközön fejti vissza, azokkal a szobakulcsokkal,
+      amiket az app futás közben elmentett az eszközre (l. fentebb a „Mit
+      tárol a JorKonvo (az app) helyben” szakaszt). A visszafejtés kizárólag
+      az eszközödön történik; senki máshoz nem kerül semmi.</p>
+      <p>Hogy mit mutasson az értesítés, azt eszközönként állíthatod be
+      (Beállítások → Értesítések → Értesítés tartalma):</p>
+      <ul>
+      <li><strong>Teljes előnézet</strong> (alapértelmezett): a feladó és az üzenet szövege,
+        titkosított szobákból is.</li>
+      <li><strong>Csak a feladó</strong>: az eszköz nem tárol üzenetkulcsot; az értesítés a
+        feladót mutatja, és azt, hogy „Új üzenet”.</li>
+      <li><strong>Rejtett</strong>: az eszköz semmit nem tárol; az értesítésben csak annyi
+        áll, hogy „Új üzenet”.</li>
+      </ul>
+      <p>A korlátok, őszintén: ha egy üzenet olyan szobakulcsot használ, ami
+      azután érkezett, hogy utoljára megnyitottad az appot, a telefonon még
+      nincs meg ez a kulcs, így az értesítésben „Titkosított üzenet” áll. Ha a
+      szervered nem érhető el (nincs kapcsolat, lejárt a bejelentkezés), az
+      értesítés „Új üzenet”-re vagy csak a feladóra egyszerűsödik — de nem
+      vész el.</p>
+      <p>iPhone/iPaden az értesítésen a feladó vagy a tér képe is megjelenik (az
+      Apple „Communication Notifications” funkciója). Ehhez az app az
+      eszközön, helyben beszélgetésként rögzíti az üzenetet (egy
+      <code>INSendMessageIntent</code> formájában). Ez az eszközödön marad; ahogy más
+      üzenetküldő appoknál, az iOS felhasználhatja például Siri-javaslatokhoz
+      vagy a megosztási lap javaslataihoz. Az iOS szokásos működésén túl
+      ebből semmi nem jut el az Apple-höz.</p>
+      <p><strong>Webböngésző.</strong> A Web Push nem változott, a teljes formátumot
+      használja:</p>
+      <ul>
+      <li><strong>Titkosítatlan szoba:</strong> a feladó nevét és Matrix-azonosítóját, a szoba nevét és az üzenet szövegét, hogy az értesítés megmutassa, ki mit írt. <strong>Ez a szöveg átmegy a push-átjárón és a böngésző gyártójának push-szolgáltatásán.</strong></li>
+      <li><strong>Titkosított szoba:</strong> a feladót, a szoba nevét, technikai azonosítókat (szoba- és eseményazonosító) és a még titkosított üzenetet, amit sem az átjáró, sem a böngésző gyártója nem tud elolvasni. Az értesítésben „Titkosított üzenet” áll.</li>
+      <li>Az olvasatlan üzenetek számát és a push-tokent.</li>
+      </ul>
+      <p>A push-átjáró nem tárolja az értesítéseket. Továbbítja őket, és
+      hibakereséshez rövid ideig technikai naplót vezet (időpont, push-token,
+      szoba-/eseményazonosító, kézbesítés eredménye — üzenetszöveg nélkül), amit
+      néhány megabájt után felülír. (A telefonos appoknál az értesítés eleve
+      csak ilyen azonosítókat tartalmaz.) Androidon a Google Firebase Messaging
+      könyvtára egy Firebase-telepítésazonosítót is létrehoz, amit a Google a
+      kézbesítéshez használ; a JorKonvo nem használ Firebase Analyticset vagy
+      más Firebase-szolgáltatást.</p>
+      <h3 id="hu-7">Választási lehetőségeid</h3>
+      <ul>
+      <li>Bármikor kiléphetsz egy szobából, <a href="delete-account.html#hu">törölheted a fiókodat</a> (a szervered
+        fiók-törlési támogatásától függően), vagy saját szervert futtathatsz a
+        teljes adatirányítás érdekében.</li>
+      <li>Beállításokban ellenőrizheted/visszavonhatod eszközök ellenőrzését,
+        visszavonhatsz más eszközökön futó munkameneteket, letilthatsz
+        (ignore/block) más felhasználókat.</li>
+      <li>Mivel a JorKonvo bármely szerverhez tud csatlakozni, ha nem vagy
+        elégedett egy adott szerver üzemeltetőjének adatkezelésével, átválthatsz
+        másikra (a Matrix támogatja a fiók-átvihetőség irányába mutató
+        törekvéseket, de a teljes átvihetőség még fejlődik protokoll-szinten —
+        nézd meg az adott szerver saját szabályzatát).</li>
+      </ul>
+      <h3 id="hu-8">Harmadik felek</h3>
+      <ul>
+      <li>Ha a szerver üzemeltetője más Matrix szerverekkel föderál (ez a legtöbb
+        nyilvános szerver alapértelmezése), a más szerveren lévő felhasználókat
+        is tartalmazó szobák üzenetei és metaadatai azok üzemeltetői számára is
+        láthatók, a szokásos Matrix-föderáció szerint. Ez a Matrix hálózat
+        tulajdonsága, nem a JorKonvo adja hozzá.</li>
+      <li>A hang-/videóhívás infrastruktúrát (LiveKit, coturn) jellemzően
+        ugyanaz a fél üzemelteti, mint a szerveredet.</li>
+      <li>A push-értesítéseket (ha be vannak kapcsolva) az Apple (APNs), a
+        Google (Firebase Cloud Messaging) vagy a böngésződ gyártójának
+        push-szolgáltatása kézbesíti, a JorKonvo push-átjáróján keresztül. Az
+        iPhone/iPad és Android app esetén ezek csak azonosítókat visznek
+        (szoba-/eseményazonosító, olvasatlan üzenetek száma, a
+        Matrix-azonosítód), üzenettartalmat nem — l. „Értesítések”.</li>
+      </ul>
+      <h3 id="hu-9">Kapcsolat</h3>
+      <p>Kérdés ezzel a szabályzattal, vagy — ha a fejlesztő üzemelteti — egy
+      konkrét szerver adatkezelési gyakorlatával kapcsolatban:
+      <strong>szabotar@szabotar.dev</strong></p>
+    </section>
+  </main>
+  <footer>
+    <nav aria-label="JorKonvo">
+      <a href="support.html">Support / Támogatás</a>
+      <a href="privacy.html">Privacy Policy / Adatvédelmi tájékoztató</a>
+      <a href="delete-account.html">Delete your account / Fiók törlése</a>
+      <a href="/">JorKonvo</a>
+    </nav>
+    <p>Contact / Kapcsolat: <a href="mailto:szabotar@szabotar.dev">szabotar@szabotar.dev</a></p>
+  </footer>
+</body>
+</html>

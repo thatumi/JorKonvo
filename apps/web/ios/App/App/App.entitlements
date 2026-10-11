@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Push notifications (APNs), 2026-09-29: the Push Notifications
+	     capability is enabled on the dev.szabotar.jorkonvo App ID and the
+	     "JorKonvo App Store" profile already carries aps-environment =
+	     production (checked in the build-130 IPA). Only App Store/TestFlight
+	     builds exist, so production is the only environment we need; the
+	     Sygnal apns pushkin is configured for it (services/sygnal). -->
+	<key>aps-environment</key>
+	<string>production</string>
+
+	<!-- Universal Links entitlement RESTORED (2026-09-27): the owner added
+	     the Associated Domains capability to the dev.szabotar.jorkonvo App ID
+	     in the Apple Developer Portal, regenerated the "JorKonvo App Store"
+	     provisioning profile, and re-uploaded it to Codemagic (still
+	     referenced as `jorkonvo` in codemagic.yaml's ios_signing block). See
+	     git history (2026-09-16) for why this was removed and what the
+	     failure looked like without the capability. -->
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:jorkonvo.szabotar.dev</string>
+	</array>
+
+	<!-- App Group (2026-09-27): the only channel a ReplayKit broadcast
+	     extension has back to the containing app - they run as separate
+	     processes, so frames cross via a shared container in this group,
+	     not any in-process API. See ScreenShareBroadcast/SampleHandler.swift
+	     and App/ScreenSharePlugin.swift. Registered + assigned to both this
+	     App ID and dev.szabotar.jorkonvo.ScreenShareBroadcast in the Apple
+	     Developer Portal. -->
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.dev.szabotar.jorkonvo</string>
+	</array>
+
+	<!-- Communication Notifications (push phase 2, 2026-09-29): the
+	     NotificationService extension donates an INSendMessageIntent so a
+	     push shows the sender's / space's picture instead of the app icon.
+	     Enabled on the App ID; the "JorKonvo App Store" profile was
+	     regenerated and re-uploaded to Codemagic as `jorkonvo`. The App
+	     Group above now also carries the push store (JorPushCore.PushStore)
+	     the app writes and the extension reads. -->
+	<key>com.apple.developer.usernotifications.communication</key>
+	<true/>
+</dict>
+</plist>

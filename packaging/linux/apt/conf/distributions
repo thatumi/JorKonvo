@@ -1,0 +1,9 @@
+Origin: JorKonvo
+Label: JorKonvo
+Codename: stable
+Architectures: amd64
+Components: main
+Description: JorKonvo desktop client (amd64 only)
+# Signing is an owner decision (key creation/custody) and is OFF in this sample.
+# To enable: create a dedicated key, then add   SignWith: <KEYID>
+# and publish the public key as /jorkonvo.gpg (see docs/LINUX_PACKAGING.md).

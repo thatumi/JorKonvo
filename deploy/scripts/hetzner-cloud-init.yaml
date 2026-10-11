@@ -1,0 +1,87 @@
+#cloud-config
+# Fresh-VM bootstrap for a JorKonvo Matrix server (Ubuntu 24.04 / Debian 12).
+#
+# This is a TEMPLATE. The rental automation (see ../terraform/ and
+# ../RENTAL.md) renders the {{PLACEHOLDERS}} and passes the result as the
+# server's user-data. For a manual run: fill them in by hand, or just install
+# docker and copy the deploy/ dir up yourself.
+
+package_update: true
+package_upgrade: true
+packages:
+  - ca-certificates
+  - curl
+  - gnupg
+  - git
+  - zstd
+  - gettext-base
+
+write_files:
+  - path: /opt/jorkonvo/.env
+    permissions: "0600"
+    content: |
+      APEX_DOMAIN={{APEX_DOMAIN}}
+      MATRIX_DOMAIN={{MATRIX_DOMAIN}}
+      LIVEKIT_DOMAIN={{LIVEKIT_DOMAIN}}
+      LK_JWT_DOMAIN={{LK_JWT_DOMAIN}}
+      MAS_DOMAIN={{MAS_DOMAIN}}
+      ADMIN_DOMAIN={{ADMIN_DOMAIN}}
+      ACME_EMAIL={{ACME_EMAIL}}
+      PUBLIC_IP=
+      POSTGRES_PASSWORD=
+      REGISTRATION_SHARED_SECRET=
+      MACAROON_SECRET_KEY=
+      FORM_SECRET=
+      LIVEKIT_API_KEY=
+      LIVEKIT_API_SECRET=
+      TURN_SHARED_SECRET=
+      MAS_ENCRYPTION_KEY=
+      MAS_SYNAPSE_SHARED_SECRET=
+      ENABLE_OPEN_REGISTRATION={{ENABLE_OPEN_REGISTRATION}}
+
+  - path: /opt/jorkonvo/bootstrap.sh
+    permissions: "0755"
+    content: |
+      #!/usr/bin/env bash
+      set -euo pipefail
+      cd /opt/jorkonvo
+
+      # Docker
+      install -m 0755 -d /etc/apt/keyrings
+      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+      chmod a+r /etc/apt/keyrings/docker.gpg
+      echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" > /etc/apt/sources.list.d/docker.list
+      apt-get update -y
+      apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+      # The deploy/ directory. Point DEPLOY_TARBALL_URL at a tarball of the
+      # repo's deploy/ folder (GitHub release asset or codeload URL) once the
+      # repo has a remote. Until then the automation scp's it into place.
+      DEPLOY_TARBALL_URL="{{DEPLOY_TARBALL_URL}}"
+      if [ -n "$DEPLOY_TARBALL_URL" ] && [ "$DEPLOY_TARBALL_URL" != "{{DEPLOY_TARBALL_URL}}" ]; then
+        curl -fsSL "$DEPLOY_TARBALL_URL" | tar xz --strip-components=1 -C /opt/jorkonvo
+      fi
+
+      [ -f docker-compose.yml ] || { echo "!! deploy/ files missing in /opt/jorkonvo - copy them up and re-run bootstrap.sh"; exit 1; }
+
+      ./scripts/provision.sh
+      docker compose up -d
+
+      # First account. The rental automation substitutes a real username here;
+      # a manual run leaves the "{{...}}" marker, which we skip.
+      ADMIN_U="{{ADMIN_USERNAME}}"
+      case "$ADMIN_U" in
+        *"{{"* | "") echo "no admin username baked in - run ./scripts/create-admin.sh yourself" ;;
+        *)
+          sleep 25
+          docker compose exec -T synapse register_new_matrix_user \
+            -u "$ADMIN_U" -p '{{ADMIN_PASSWORD}}' -a \
+            -c /data/homeserver.yaml http://localhost:8008 || true
+          ;;
+      esac
+      touch /opt/jorkonvo/.provisioned
+
+runcmd:
+  - [ bash, /opt/jorkonvo/bootstrap.sh ]
+
+final_message: "JorKonvo server bootstrap finished after $UPTIME seconds"

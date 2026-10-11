@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CAPACITOR_DEBUG</key>
+	<string>$(CAPACITOR_DEBUG)</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+        <string>JorKonvo</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+    <false/>
+    <key>UISceneConfigurations</key>
+    <dict>
+      <key>UIWindowSceneSessionRoleApplication</key>
+      <array>
+        <dict>
+            <key>UISceneConfigurationName</key>
+            <string>Default Configuration</string>
+            <key>UISceneDelegateClassName</key>
+            <string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
+            <key>UISceneStoryboardFile</key>
+            <string>Main</string>
+        </dict>
+      </array>
+    </dict>
+	</dict>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<true/>
+
+	<!-- Fallback custom-scheme deep link (jorkonvo://join/...), on top of the
+	     real Universal Link (applinks:jorkonvo.szabotar.dev, see
+	     App.entitlements + apps/web/public/.well-known/apple-app-site-association).
+	     Universal Links need the real Apple Team ID in that AASA file and a
+	     live HTTPS host to actually verify - until both are true (or if a
+	     link ever reaches the device through a channel that strips the
+	     Universal Link association, e.g. some QR scanners), this scheme
+	     still opens the app directly. Not a replacement, a safety net. -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>jorkonvo</string>
+			</array>
+			<key>CFBundleURLName</key>
+			<string>dev.szabotar.jorkonvo</string>
+		</dict>
+	</array>
+
+	<!-- ===================================================================
+	     JorKonvo native-capability declarations (hand-added, kept across
+	     `cap sync` — Capacitor never rewrites Info.plist).
+
+	     Rule mirrored from android/app/src/main/AndroidManifest.xml: only
+	     declare what the web code actually calls. Each string is Hungarian
+	     (app UI language) and names the concrete feature that triggers the
+	     prompt, so App Review sees an honest purpose string.
+	     =================================================================== -->
+
+	<!-- getUserMedia({video}) inside WKWebView: QR-login scanner
+	     (src/components/QrScanner.tsx via qrLoginStore), the pre-call
+	     camera check (CameraPreview.tsx), video calls (callStore.ts), and
+	     the "Fénykép készítése" option of the message attachment picker
+	     (MessageComposer.tsx <input type="file">). -->
+	<key>NSCameraUsageDescription</key>
+	<string>A kamera a QR-kódos bejelentkezéshez, a videohívásokhoz és fényképek üzenethez csatolásához kell.</string>
+
+	<!-- getUserMedia({audio}): hangüzenet-felvétel (VoiceRecorderBar.tsx)
+	     és a hang-/videohívások mikrofonja (callStore.ts). -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>A mikrofon a hangüzenetekhez és a hang- és videohívásokhoz kell.</string>
+
+	<!-- WKWebView <input type="file" accept="image/*"> photo-library path:
+	     kép csatolása üzenethez (MessageComposer.tsx) és profil-/tér-kép
+	     beállítása (UserSettingsModal.tsx, SpaceSettingsModal.tsx,
+	     RoomSettingsModal.tsx). -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>A fotókönyvtár a képek üzenethez csatolásához, valamint profil- és térképek beállításához kell.</string>
+
+	<!-- navigator.geolocation.getCurrentPosition / watchPosition:
+	     helymegosztás üzenetben (src/components/modals/ShareLocationModal.tsx)
+	     és élő helymegosztás (LiveLocationSharer.tsx + locationShareStore.ts).
+	     A LocationMessage / LiveLocationCard csak térképre linkel — az önmagában
+	     nem indokolná ezt, a valódi ok a fenti két aktív helylekérdezés. -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>A helyadatok a helyed megosztásához és az élő helymegosztáshoz kellenek, csak amíg az alkalmazást használod.</string>
+
+	<!-- Export-compliance (App Store Connect: "Uses non-exempt encryption?").
+	     Döntés: NO / false.
+	     JorKonvo végponttól végpontig titkosít (Matrix Olm/Megolm a
+	     matrix-rust-sdk-crypto-wasm-on keresztül), de kizárólag szabványos,
+	     nyilvános kriptográfiai algoritmusokkal (Curve25519, AES-256,
+	     HMAC-SHA256) a felhasználói üzenetek védelmére — nincs saját
+	     titkosító primitív. Ez az EAR Cat. 5 Part 2 alóli "tömegpiaci"
+	     kivétel alá esik, így önálló BIS self-classification jelentés nem
+	     szükséges. A tulajdonos ellenőrizze/erősítse meg a beküldés előtt;
+	     ha a terjesztés bővül, évente CCATS/self-classification jelentés
+	     kellhet. Ezzel az Xcode nem kérdez rá minden archiválásnál. -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+
+	<!-- SZÁNDÉKOSAN NINCS itt UIBackgroundModes = remote-notification.
+	     A push (Capacitor @capacitor/push-notifications → APNs-token →
+	     Matrix pusher → services/sygnal → APNs) LÁTHATÓ alert-értesítés
+	     (aps.alert loc-key JK_NEW_MESSAGE, *.lproj/Localizable.strings) +
+	     mutable-content, amit a NotificationService extension egészít ki
+	     (2. fázis) - ehhez nem kell háttérmód. Csak csendes
+	     (content-available) pushhoz kellene, azt nem küldünk; fölöslegesen
+	     App Review-kérdést okozna. -->
+
+	<!-- Communication Notifications: az extension INSendMessageIntentet
+	     adományoz, hogy az értesítésen a feladó / tér képe legyen az
+	     alkalmazásikon helyett (NotificationService/NotificationService.swift). -->
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>INSendMessageIntent</string>
+	</array>
+</dict>
+</plist>
