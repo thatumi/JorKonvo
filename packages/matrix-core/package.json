@@ -1,13 +1,19 @@
 {
   "name": "@jorkonvo/matrix-core",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Framework-agnostic Matrix protokoll wrapper (matrix-js-sdk alapokon)",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
-    "./qr": { "types": "./dist/qrLogin.d.ts", "default": "./dist/qrLogin.js" }
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./qr": {
+      "types": "./dist/qrLogin.d.ts",
+      "default": "./dist/qrLogin.js"
+    }
   },
   "scripts": {
     "build": "tsc -b",
