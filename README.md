@@ -1,79 +1,83 @@
 # JorKonvo
 
-Discord-szerű felületű Matrix kliens. Egyetlen React/TypeScript kódbázis,
-ami böngészőben fut (React + Vite + Tailwind v4), és ugyanaz a build csomagolva
-desktopon (Tauri + CEF) és Androidon (Capacitor) is.
+A Discord-style chat client for [Matrix](https://matrix.org), the open,
+decentralized chat protocol. One React/TypeScript codebase that runs in the
+browser (React + Vite + Tailwind v4), and the same build packaged for
+desktop (Tauri + CEF) and Android (Capacitor).
 
-- **[PLAN.md](PLAN.md)** – a teljes fejlesztési napló, körökre bontva
-- **[CLAUDE.md](CLAUDE.md)** – architektúra dióhéjban, konvenciók, gotchák
-- **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** – részletes architektúra
-- **[deploy/DEPLOY.md](deploy/DEPLOY.md)** – saját instance üzembe helyezése
+- **[jorkonvo.com](https://jorkonvo.com)** – landing page & downloads
+- **[app.jorkonvo.com](https://app.jorkonvo.com)** – use it in the browser, no install
+- **[PLAN.md](PLAN.md)** – the full development log, round by round
+- **[CLAUDE.md](CLAUDE.md)** – architecture in a nutshell, conventions, gotchas
+- **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** – detailed architecture
+- **[deploy/DEPLOY.md](deploy/DEPLOY.md)** – running your own instance
 
-## Mappaszerkezet
+## Layout
 
 ```
-packages/matrix-core/   Framework-agnosztikus Matrix logika (matrix-js-sdk
-                        wrapper). NINCS benne React – ez a forrás igazság a
-                        protokoll-viselkedéshez.
-apps/web/               React + Vite alkalmazás – a forrás igazság a UI-hoz.
-apps/desktop/           Tauri shell (CEF runtime), a web buildet tölti be.
-apps/web/android/       Capacitor Android projekt (verziókövetve).
-deploy/                 "Matrix szerver dobozban" – Docker Compose + Terraform.
-e2e/                    Playwright teszt-csomag + eldobható Synapse.
-test/                   Vitest egység-tesztek.
+packages/matrix-core/   Framework-agnostic Matrix logic (a matrix-js-sdk
+                        wrapper). NO React - the source of truth for
+                        protocol behaviour.
+apps/web/               React + Vite app - the source of truth for the UI.
+apps/desktop/           Tauri shell (CEF runtime), loads the web build.
+apps/web/android/       Capacitor Android project (tracked in git).
+deploy/                 "Matrix server in a box" - Docker Compose + Terraform.
+e2e/                    Playwright suite + a disposable Synapse.
+test/                   Vitest unit tests.
 ```
 
-npm workspaces (pnpm/yarn nem – l. PLAN.md). A `@jorkonvo/matrix-core`
-workspace-csomagként fogyasztódik: **előbb buildeld** (`npm run build:matrix-core`),
-különben a `dist/*.d.ts` hiányában a web build nem tudja feloldani.
+npm workspaces (not pnpm/yarn - see PLAN.md). `@jorkonvo/matrix-core` is
+consumed as a workspace package: **build it first**
+(`npm run build:matrix-core`), or the web build can't resolve it, since
+`dist/*.d.ts` won't exist yet.
 
-## Fejlesztés
+## Development
 
-Előfeltétel: **Node.js 20.19+ / 22.12+** (a build `rolldown-vite`-ot használ).
+Requires **Node.js 20.19+ / 22.12+** (the build uses `rolldown-vite`).
 
 ```bash
 npm install
-npm run build:matrix-core     # kötelező első lépés
-npm run dev:web               # Vite dev szerver: http://localhost:5173
+npm run build:matrix-core     # required first step
+npm run dev:web                # Vite dev server: http://localhost:5173
 ```
 
-Teljes build: `npm run build` (`build:matrix-core` + `tsc -b && vite build`).
+Full build: `npm run build` (`build:matrix-core` + `tsc -b && vite build`).
 
 ### Desktop (Tauri)
 
 ```bash
-cd apps/desktop && npm run dev        # betölti a Vite dev szervert
+cd apps/desktop && npm run dev        # loads the Vite dev server
 ```
 
-A desktop shell a Tauri `feat/cef` (kiadatlan) ágát használja, ami valódi
-Chromiumot ágyaz be CEF-en át – ez kell a képernyőmegosztáshoz Linuxon.
+The desktop shell uses Tauri's unreleased `feat/cef` branch to embed real
+Chromium via CEF - needed for screen sharing on Linux.
 
-### Mobil (Capacitor)
+### Mobile (Capacitor)
 
-Az Android natív projekt (`apps/web/android/`) legenerálva és buildelhető.
-iOS-hez Mac + Xcode kell (l. PLAN.md).
+The Android native project (`apps/web/android/`) is generated and
+buildable. iOS needs a Mac + Xcode (see PLAN.md).
 
-## Tesztelés
+## Testing
 
 ```bash
-npm test                    # Vitest egység-tesztek (böngésző/szerver nélkül)
-./e2e/scripts/up.sh         # eldobható Synapse felhozása
-npm run test:e2e            # Playwright E2E (valós Chromium)
-./e2e/scripts/down.sh       # lebontás
+npm test                    # Vitest unit tests (no browser, no server)
+./e2e/scripts/up.sh         # bring up a disposable Synapse
+npm run test:e2e            # Playwright E2E (real Chromium)
+./e2e/scripts/down.sh       # tear it down
 ```
 
-Első alkalommal: `npx playwright install chromium`.
+First time: `npx playwright install chromium`.
 
-CI: `.forgejo/workflows/ci.yml` (build + lint + unit minden push-ra; az E2E
-job Docker-képes runnert igényel).
+CI: `.forgejo/workflows/ci.yml` (build + lint + unit on every push; the E2E
+job needs a Docker-capable runner).
 
-## Licenc / állapot
+## License / status
 
-Korai fejlesztési fázisban lévő személyes projekt, MIT licenc alatt (l.
+Early-stage personal project, under the MIT license (see
 [LICENSE](LICENSE)).
 
-A kódbázis nagy része Claude Code-dal (Anthropic AI-asszisztense) készült,
-az én irányításommal és döntéseimmel – architektúra, prioritások, élesben
-tesztelt viselkedés mind az enyém, de a tényleges kódsorok nagy hányadát az
-AI írta. Ha ez neked számít a hozzájárulásnál vagy a kód megítélésénél,
-most tudod.
+Most of the codebase was built with Claude Code (Anthropic's AI assistant),
+under my direction - the architecture, priorities, and live-tested behaviour
+are mine, but the AI wrote the large majority of the actual lines. If that
+matters to you when judging the code or deciding to contribute, now you
+know.
