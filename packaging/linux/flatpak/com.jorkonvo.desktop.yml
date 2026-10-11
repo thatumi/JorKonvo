@@ -7,7 +7,7 @@
 # Not Flathub-ready: Flathub wants a from-source build (no prebuilt binaries),
 # which the git `feat/cef` Tauri dependency tree does not allow yet. This is for
 # a self-hosted Flatpak repo / a .flatpak bundle.
-app-id: dev.jorkonvo.desktop
+app-id: com.jorkonvo.desktop
 runtime: org.gnome.Platform
 runtime-version: '48'
 sdk: org.gnome.Sdk
@@ -45,9 +45,9 @@ modules:
         sha256: f9383dcc66ff5d6173955cc7416a5513219459182ba6fc7f8474265cb3b666a0
         dest-filename: jorkonvo.deb
       - type: file
-        path: dev.jorkonvo.desktop.desktop
+        path: com.jorkonvo.desktop.desktop
       - type: file
-        path: dev.jorkonvo.desktop.metainfo.xml
+        path: com.jorkonvo.desktop.metainfo.xml
       - type: file
         path: jorkonvo.sh
     build-commands:
@@ -58,10 +58,10 @@ modules:
       - cp -a root/usr/share/JorKonvo/. /app/lib/jorkonvo/
       - rm -f /app/lib/jorkonvo/chrome-sandbox
       - install -Dm755 jorkonvo.sh /app/bin/jorkonvo
-      - install -Dm644 dev.jorkonvo.desktop.desktop /app/share/applications/dev.jorkonvo.desktop.desktop
-      - install -Dm644 dev.jorkonvo.desktop.metainfo.xml /app/share/metainfo/dev.jorkonvo.desktop.metainfo.xml
+      - install -Dm644 com.jorkonvo.desktop.desktop /app/share/applications/com.jorkonvo.desktop.desktop
+      - install -Dm644 com.jorkonvo.desktop.metainfo.xml /app/share/metainfo/com.jorkonvo.desktop.metainfo.xml
       - |
         for s in 32x32 128x128 512x512; do
           install -Dm644 root/usr/share/icons/hicolor/$s/apps/jorkonvo-desktop.png \
-            /app/share/icons/hicolor/$s/apps/dev.jorkonvo.desktop.png
+            /app/share/icons/hicolor/$s/apps/com.jorkonvo.desktop.png
         done
