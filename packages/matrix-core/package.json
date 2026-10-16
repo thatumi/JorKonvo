@@ -1,6 +1,6 @@
 {
   "name": "@jorkonvo/matrix-core",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Framework-agnostic Matrix protokoll wrapper (matrix-js-sdk alapokon)",
   "type": "module",
   "main": "dist/index.js",
