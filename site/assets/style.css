@@ -130,6 +130,8 @@ section { padding: 64px 0; }
 .dl-card {
   background: var(--color-bg-primary); border: 1px solid var(--color-border); border-radius: var(--radius-lg);
   padding: 22px; display: flex; flex-direction: column; gap: 10px;
+  min-width: 0; /* grid items default to min-width:auto, which lets an unbreakable .dl-code
+                   line force the column wider than its 1fr share and blow out the grid */
 }
 .dl-card .platform-head { display: flex; align-items: center; gap: 10px; }
 .dl-card .platform-icon { font-size: 1.4rem; }
@@ -148,7 +150,7 @@ section { padding: 64px 0; }
 .dl-code {
   background: var(--color-bg-dark); border: 1px solid var(--color-border); border-radius: var(--radius-md);
   padding: 10px 12px; font-size: 0.74rem; line-height: 1.5; color: var(--color-header);
-  overflow-x: auto; white-space: pre; margin: 0;
+  overflow-x: auto; white-space: pre; margin: 0; max-width: 100%; box-sizing: border-box;
 }
 
 footer { border-top: 1px solid var(--color-border); padding: 40px 0; margin-top: 20px; }

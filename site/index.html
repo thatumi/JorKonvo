@@ -6,7 +6,7 @@
 <title>JorKonvo — Discord-style chat on the open Matrix protocol</title>
 <meta name="description" content="JorKonvo is a Discord-style chat client for Matrix: spaces, channels, voice &amp; video calls, end-to-end encryption. Use any server, or your own." />
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
-<link rel="stylesheet" href="assets/style.css" />
+<link rel="stylesheet" href="assets/style.css?v=2" />
 </head>
 <body>
 
@@ -169,10 +169,13 @@
         <pre class="dl-code">curl -fsSL https://jorkonvo.com/apt/jorkonvo.gpg | sudo tee /usr/share/keyrings/jorkonvo.gpg &gt;/dev/null
 echo "deb [signed-by=/usr/share/keyrings/jorkonvo.gpg] https://jorkonvo.com/apt stable main" | sudo tee /etc/apt/sources.list.d/jorkonvo.list
 sudo apt update &amp;&amp; sudo apt install jor-konvo</pre>
-        <p class="dl-note" data-i18n-hide-hu>Arch (AUR, once published):</p>
-        <p class="dl-note" data-i18n-hide-en>Arch (AUR, hamarosan):</p>
-        <pre class="dl-code">git clone https://aur.archlinux.org/jorkonvo-bin.git
-cd jorkonvo-bin &amp;&amp; makepkg -si</pre>
+        <p class="dl-note" data-i18n-hide-hu>Arch (PKGBUILD, not on AUR yet):</p>
+        <p class="dl-note" data-i18n-hide-en>Arch (PKGBUILD, még nincs AUR-on):</p>
+        <pre class="dl-code">mkdir jorkonvo-bin &amp;&amp; cd jorkonvo-bin
+for f in PKGBUILD .SRCINFO jorkonvo.desktop jorkonvo.sh LICENSE; do
+  curl -fsSLO "https://git.szabotar.dev/thatumi/JorKonvo/raw/branch/main/packaging/linux/aur/jorkonvo-bin/$f"
+done
+makepkg -si</pre>
         <p class="dl-note" data-i18n-hide-hu>All builds unsigned - GPG-signed SHA256SUMS on every release.</p>
         <p class="dl-note" data-i18n-hide-en>Minden build aláíratlan - de minden release mellett GPG-aláírt SHA256SUMS van.</p>
       </div>
