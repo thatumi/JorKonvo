@@ -147,11 +147,20 @@ section { padding: 64px 0; }
 .dl-link:hover { border-color: var(--color-brand); color: var(--color-brand); }
 .dl-link .arrow { opacity: 0.6; }
 .dl-note { font-size: 0.78rem; color: var(--color-muted); }
+.dl-code-wrap { position: relative; }
 .dl-code {
   background: var(--color-bg-dark); border: 1px solid var(--color-border); border-radius: var(--radius-md);
-  padding: 10px 12px; font-size: 0.74rem; line-height: 1.5; color: var(--color-header);
+  padding: 10px 40px 10px 12px; font-size: 0.74rem; line-height: 1.5; color: var(--color-header);
   overflow-x: auto; white-space: pre; margin: 0; max-width: 100%; box-sizing: border-box;
 }
+.dl-copy-btn {
+  position: absolute; top: 7px; right: 7px; width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 6px;
+  color: var(--color-muted); cursor: pointer; padding: 0;
+}
+.dl-copy-btn:hover { color: var(--color-header); border-color: var(--color-brand); }
+.dl-copy-btn.copied { color: #4caf50; border-color: #4caf50; }
 
 footer { border-top: 1px solid var(--color-border); padding: 40px 0; margin-top: 20px; }
 footer .wrap { display: flex; flex-wrap: wrap; gap: 24px; align-items: center; justify-content: space-between; }

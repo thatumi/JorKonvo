@@ -6,7 +6,7 @@
 <title>JorKonvo — Discord-style chat on the open Matrix protocol</title>
 <meta name="description" content="JorKonvo is a Discord-style chat client for Matrix: spaces, channels, voice &amp; video calls, end-to-end encryption. Use any server, or your own." />
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
-<link rel="stylesheet" href="assets/style.css?v=2" />
+<link rel="stylesheet" href="assets/style.css?v=3" />
 </head>
 <body>
 
@@ -287,6 +287,47 @@ makepkg -si</pre>
   themeBtn.addEventListener("click", function () {
     applyTheme(html.getAttribute("data-theme") === "light" ? "dark" : "light");
   });
+
+  var copyIcon = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+  var checkIcon = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+  Array.prototype.forEach.call(document.querySelectorAll("pre.dl-code"), function (pre) {
+    var wrap = document.createElement("div");
+    wrap.className = "dl-code-wrap";
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "dl-copy-btn";
+    btn.setAttribute("aria-label", "Copy");
+    btn.innerHTML = copyIcon;
+    wrap.appendChild(btn);
+
+    btn.addEventListener("click", function () {
+      var text = pre.textContent;
+      var done = function () {
+        btn.innerHTML = checkIcon;
+        btn.classList.add("copied");
+        setTimeout(function () { btn.innerHTML = copyIcon; btn.classList.remove("copied"); }, 1500);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text, done); });
+      } else {
+        fallbackCopy(text, done);
+      }
+    });
+  });
+
+  function fallbackCopy(text, done) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); done(); } catch (e) {}
+    document.body.removeChild(ta);
+  }
 })();
 </script>
 
