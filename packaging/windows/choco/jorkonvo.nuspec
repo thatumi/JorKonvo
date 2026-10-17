@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>jorkonvo</id>
+    <version>0.1.5</version>
+    <packageSourceUrl>https://git.szabotar.dev/thatumi/JorKonvo/src/branch/main/packaging/windows/choco</packageSourceUrl>
+    <owners>thatumi</owners>
+    <title>JorKonvo</title>
+    <authors>Tamás Szabó</authors>
+    <projectUrl>https://jorkonvo.com</projectUrl>
+    <iconUrl>https://jorkonvo.com/assets/icon-512.png</iconUrl>
+    <licenseUrl>https://git.szabotar.dev/thatumi/JorKonvo/raw/branch/main/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://git.szabotar.dev/thatumi/JorKonvo</projectSourceUrl>
+    <docsUrl>https://jorkonvo.com</docsUrl>
+    <bugTrackerUrl>https://git.szabotar.dev/thatumi/JorKonvo/issues</bugTrackerUrl>
+    <tags>jorkonvo matrix chat discord voice video e2ee</tags>
+    <summary>Discord-style chat client for the Matrix protocol</summary>
+    <description>JorKonvo is a Discord-style client for the Matrix protocol: servers (spaces), roles, voice and video calls, end-to-end encryption. This is the desktop build (Tauri + WebView2).
+
+Unsigned installer - Windows SmartScreen may warn on first run ("More info" -> "Run anyway"). A code-signing certificate is planned once the project has enough usage history for free OSS signing programs to accept it.</description>
+    <releaseNotes>https://git.szabotar.dev/thatumi/JorKonvo/releases/tag/windows-v0.1.5</releaseNotes>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>

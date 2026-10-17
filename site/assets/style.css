@@ -145,6 +145,11 @@ section { padding: 64px 0; }
 .dl-link:hover { border-color: var(--color-brand); color: var(--color-brand); }
 .dl-link .arrow { opacity: 0.6; }
 .dl-note { font-size: 0.78rem; color: var(--color-muted); }
+.dl-code {
+  background: var(--color-bg-dark); border: 1px solid var(--color-border); border-radius: var(--radius-md);
+  padding: 10px 12px; font-size: 0.74rem; line-height: 1.5; color: var(--color-header);
+  overflow-x: auto; white-space: pre; margin: 0;
+}
 
 footer { border-top: 1px solid var(--color-border); padding: 40px 0; margin-top: 20px; }
 footer .wrap { display: flex; flex-wrap: wrap; gap: 24px; align-items: center; justify-content: space-between; }

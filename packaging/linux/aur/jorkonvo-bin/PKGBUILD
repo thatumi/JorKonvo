@@ -6,7 +6,7 @@
 # mounted AppImage. Test with packaging/linux/aur/test-in-container.sh.
 pkgname=jorkonvo-bin
 _appname=JorKonvo
-pkgver=0.1.4
+pkgver=0.1.5
 pkgrel=1
 pkgdesc="Discord-style Matrix client (Tauri + Chromium/CEF desktop app)"
 arch=('x86_64')
@@ -40,7 +40,7 @@ source=("${_appimage}::${url}/releases/download/linux-v${pkgver}/${_appimage}"
         "jorkonvo.sh"
         "LICENSE")
 noextract=("${_appimage}")
-sha256sums=('b08bf31f368b871bbc6ffa149da51144e7f053541d66345e4420834b399eb17d'   # AppImage: dist/linux/SHA256SUMS - update on every release
+sha256sums=('6cb0befefe4adfdb7e9b6590ee82bcdc948c3cb75695f451a99e8c627e995c3f'   # AppImage: dist/linux/SHA256SUMS - update on every release
             '9475b756cd971ecfcaf79bd4bf36a38cf1add37ca3c2123259f35ed65c9a2001'
             '7fa7e1ddfc4cc3a44fdcc841f9570de81bb6ed694551b81ab61b4adaaad6b6a1'
             '443c7c13338a8d9b49799d7bafbd327039abdbb8ca92e94f2ceb767a63ac2b33')

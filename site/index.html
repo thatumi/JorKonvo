@@ -151,55 +151,67 @@
 
       <div class="dl-card">
         <div class="platform-head"><span class="platform-icon">🐧</span><h3>Linux</h3></div>
-        <p class="status" data-i18n-hide-hu>v0.1.4 — prerelease</p>
-        <p class="status" data-i18n-hide-en>v0.1.4 — előzetes kiadás</p>
+        <p class="status" data-i18n-hide-hu>v0.1.5 — prerelease</p>
+        <p class="status" data-i18n-hide-en>v0.1.5 — előzetes kiadás</p>
         <div class="dl-links">
-          <a class="dl-link" href="https://git.szabotar.dev/thatumi/JorKonvo/releases/download/linux-v0.1.4/JorKonvo_0.1.4_amd64.AppImage">
+          <a class="dl-link" href="https://git.szabotar.dev/thatumi/JorKonvo/releases/download/linux-v0.1.5/JorKonvo_0.1.5_amd64.AppImage">
             <span>AppImage</span><span class="arrow">↓</span>
           </a>
-          <a class="dl-link" href="https://git.szabotar.dev/thatumi/JorKonvo/releases/download/linux-v0.1.4/JorKonvo_0.1.4_amd64.deb">
+          <a class="dl-link" href="https://git.szabotar.dev/thatumi/JorKonvo/releases/download/linux-v0.1.5/JorKonvo_0.1.5_amd64.deb">
             <span>.deb</span><span class="arrow">↓</span>
           </a>
-          <a class="dl-link" href="https://git.szabotar.dev/thatumi/JorKonvo/releases/download/linux-v0.1.3/dev.jorkonvo.desktop.flatpak">
-            <span>Flatpak (v0.1.3)</span><span class="arrow">↓</span>
+          <a class="dl-link" href="https://git.szabotar.dev/thatumi/JorKonvo/releases/download/linux-v0.1.5/com.jorkonvo.desktop.flatpak">
+            <span>Flatpak</span><span class="arrow">↓</span>
           </a>
         </div>
-        <p class="dl-note" data-i18n-hide-hu>AUR (<code>jorkonvo-bin</code>) coming soon. All builds unsigned.</p>
-        <p class="dl-note" data-i18n-hide-en>AUR (<code>jorkonvo-bin</code>) hamarosan. Minden build aláíratlan.</p>
+        <p class="dl-note" data-i18n-hide-hu>Debian/Ubuntu (apt repo):</p>
+        <p class="dl-note" data-i18n-hide-en>Debian/Ubuntu (apt repó):</p>
+        <pre class="dl-code">curl -fsSL https://jorkonvo.com/apt/jorkonvo.gpg | sudo tee /usr/share/keyrings/jorkonvo.gpg &gt;/dev/null
+echo "deb [signed-by=/usr/share/keyrings/jorkonvo.gpg] https://jorkonvo.com/apt stable main" | sudo tee /etc/apt/sources.list.d/jorkonvo.list
+sudo apt update &amp;&amp; sudo apt install jor-konvo</pre>
+        <p class="dl-note" data-i18n-hide-hu>Arch (AUR, once published):</p>
+        <p class="dl-note" data-i18n-hide-en>Arch (AUR, hamarosan):</p>
+        <pre class="dl-code">git clone https://aur.archlinux.org/jorkonvo-bin.git
+cd jorkonvo-bin &amp;&amp; makepkg -si</pre>
+        <p class="dl-note" data-i18n-hide-hu>All builds unsigned - GPG-signed SHA256SUMS on every release.</p>
+        <p class="dl-note" data-i18n-hide-en>Minden build aláíratlan - de minden release mellett GPG-aláírt SHA256SUMS van.</p>
       </div>
 
       <div class="dl-card">
         <div class="platform-head"><span class="platform-icon">🪟</span><h3>Windows</h3></div>
-        <p class="status" data-i18n-hide-hu>v0.1.4 — prerelease</p>
-        <p class="status" data-i18n-hide-en>v0.1.4 — előzetes kiadás</p>
+        <p class="status" data-i18n-hide-hu>v0.1.5 — prerelease</p>
+        <p class="status" data-i18n-hide-en>v0.1.5 — előzetes kiadás</p>
         <div class="dl-links">
-          <a class="dl-link" href="https://git.szabotar.dev/thatumi/JorKonvo/releases/download/windows-v0.1.4/JorKonvo_0.1.4_x64-setup.exe">
+          <a class="dl-link" href="https://git.szabotar.dev/thatumi/JorKonvo/releases/download/windows-v0.1.5/JorKonvo_0.1.5_x64-setup.exe">
             <span data-i18n-hide-hu>Installer (.exe)</span>
             <span data-i18n-hide-en>Telepítő (.exe)</span>
             <span class="arrow">↓</span>
           </a>
         </div>
-        <p class="dl-note beta" data-i18n-hide-hu>Unsigned — Windows SmartScreen will warn.</p>
-        <p class="dl-note beta" data-i18n-hide-en>Aláíratlan — a Windows SmartScreen figyelmeztetni fog.</p>
+        <p class="dl-note beta" data-i18n-hide-hu>Unsigned — Windows SmartScreen will warn ("More info" → "Run anyway"). winget/Chocolatey packages in progress.</p>
+        <p class="dl-note beta" data-i18n-hide-en>Aláíratlan — a Windows SmartScreen figyelmeztetni fog ("További információ" → "Futtatás mindenképp"). winget/Chocolatey csomagok előkészítve.</p>
       </div>
 
       <div class="dl-card">
         <div class="platform-head"><span class="platform-icon">🤖</span><h3>Android</h3></div>
-        <p class="status beta" data-i18n-hide-hu>Coming soon — Play Store &amp; F-Droid</p>
-        <p class="status beta" data-i18n-hide-en>Hamarosan — Play Store és F-Droid</p>
+        <p class="status beta" data-i18n-hide-hu>v0.1.5 — prerelease; Play Store review pending</p>
+        <p class="status beta" data-i18n-hide-en>v0.1.5 — előzetes kiadás; Play Store elbírálás folyamatban</p>
         <div class="dl-links">
-          <a class="dl-link" href="https://app.jorkonvo.com" target="_blank" rel="noopener">
-            <span data-i18n-hide-hu>Use the web app meanwhile</span>
-            <span data-i18n-hide-en>Addig is a webapp</span>
-            <span class="arrow">↗</span>
+          <a class="dl-link" href="https://git.szabotar.dev/thatumi/JorKonvo/releases/download/android-v0.1.5/JorKonvo_0.1.5.apk">
+            <span>APK</span><span class="arrow">↓</span>
           </a>
         </div>
+        <p class="dl-note" data-i18n-hide-hu>F-Droid (self-hosted repo):</p>
+        <p class="dl-note" data-i18n-hide-en>F-Droid (saját repó):</p>
+        <pre class="dl-code">Repo: https://jorkonvo.com/fdroid/repo</pre>
+        <p class="dl-note" data-i18n-hide-hu>Not on the main F-Droid index (uses Google Firebase push).</p>
+        <p class="dl-note" data-i18n-hide-en>Nincs a fő F-Droid indexben (Google Firebase push-t használ).</p>
       </div>
 
       <div class="dl-card">
         <div class="platform-head"><span class="platform-icon">🍎</span><h3>iPhone &amp; iPad</h3></div>
-        <p class="status beta" data-i18n-hide-hu>Coming soon — TestFlight</p>
-        <p class="status beta" data-i18n-hide-en>Hamarosan — TestFlight</p>
+        <p class="status beta" data-i18n-hide-hu>In testing — TestFlight</p>
+        <p class="status beta" data-i18n-hide-en>Tesztelés alatt — TestFlight</p>
         <div class="dl-links">
           <a class="dl-link" href="https://app.jorkonvo.com" target="_blank" rel="noopener">
             <span data-i18n-hide-hu>Use the web app meanwhile</span>
@@ -207,6 +219,8 @@
             <span class="arrow">↗</span>
           </a>
         </div>
+        <p class="dl-note beta" data-i18n-hide-hu>A public TestFlight invite link is coming once the build finishes Apple's processing.</p>
+        <p class="dl-note beta" data-i18n-hide-en>Publikus TestFlight meghívó link hamarosan, amint Apple feldolgozza a build-et.</p>
       </div>
 
       <div class="dl-card">

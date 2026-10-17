@@ -62,10 +62,9 @@ would need matching Android `assetlinks.json` / iOS
 keep working either way since the app's own routing is client-side (no
 server routes to break).
 
-**Blocked on repo visibility:** every download button links to a Forgejo
-release asset (`git.szabotar.dev/thatumi/JorKonvo/releases/download/...`).
-Those links 404 for anyone without repo access until the JorKonvo repo is
-made public (tracked as its own item in `.hub/status.json`).
+**Repo visibility (resolved 2026-10-17):** the Forgejo repo and the GitHub
+mirror are both public now, so the `git.szabotar.dev/thatumi/JorKonvo/
+releases/download/...` download links work for anyone.
 
 **App Store listing URLs still need updating:** `store/app-store-listing.md`
 has Support URL `https://jorkonvo.szabotar.dev/support.html` and Marketing
@@ -77,3 +76,31 @@ URL `https://jorkonvo.szabotar.dev` — both predate this site. Should become
 The download section (`index.html`, `#download`) hardcodes version numbers
 and asset URLs per platform. Bump them by hand when cutting a new release -
 there's no templating.
+
+## apt repo (`/apt/`)
+
+`site/apt/` is a real, GPG-signed flat `dists`+`pool` apt repo, built with
+`packaging/linux/apt/build-repo.sh <path-to-.deb>` (reprepro, unsigned,
+inside a throwaway `debian:trixie` container) and then signed from the
+host: `gpg --default-key releases@jorkonvo.com --armor --detach-sign -o
+dists/stable/Release.gpg dists/stable/Release` (+ a clearsigned
+`InRelease` the same way). `jorkonvo.gpg`/`jorkonvo.asc` are the exported
+**public** key only - verified end-to-end with a real `apt install` inside
+a fresh `debian:bookworm` container. Rebuild + re-sign on every release;
+nothing here needs a new subdomain, it's served by the same nginx
+container as the rest of this site.
+
+## F-Droid repo (`/fdroid/`)
+
+Self-hosted, **not** the main f-droid.org index - JorKonvo links
+`com.google.firebase:firebase-messaging` for push, which the official index
+disallows regardless of the app's own (MIT) license. Built with
+`fdroidserver` (`pip install fdroidserver`; `fdroid init --no-prompt -d
+"..."` once, then `fdroid update -c && fdroid update` per release after
+copying the new APK into `repo/`). The whole `site/fdroid/` tree is
+**gitignored** - `config.yml` holds the repo's signing keystore password in
+plaintext, and `repo/` is fully regenerable - it lives only on the server
+that serves `jorkonvo.com/fdroid/`. If that host is ever rebuilt, re-run
+`fdroid init` (a new repo signing key is fine - F-Droid clients re-trust a
+repo by URL+fingerprint on first add, this isn't a GPG-style web of trust)
+and reset `config.yml`'s `repo_url` to `https://jorkonvo.com/fdroid/repo`.

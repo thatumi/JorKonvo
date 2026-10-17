@@ -41,3 +41,17 @@ test/coverage/
 .cache/
 .turbo/
 .aider*
+
+# self-hosted F-Droid repo: config.yml holds the repo signing keystore
+# password in plaintext, and repo/ is generated (APK + regenerated indices)
+# - never commit secrets or regenerable binaries. Lives only on the server
+# that serves jorkonvo.com/fdroid/ (see site/README.md).
+site/fdroid/
+
+# self-hosted apt repo: dists/+pool/ are fully regenerated per release by
+# packaging/linux/apt/build-repo.sh (which bundles a .deb release asset -
+# a 100+ MB binary that does not belong in git history). Only the exported
+# public signing key is tracked. Lives only on the server that serves
+# jorkonvo.com/apt/ (see site/README.md).
+site/apt/dists/
+site/apt/pool/
